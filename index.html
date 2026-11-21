@@ -415,12 +415,14 @@ select.inp option{background:#0b1421;color:var(--ink)}
 .cbh b{font:700 13px var(--cond);letter-spacing:.2em;text-transform:uppercase;color:var(--ink)}
 .cbh small{font:600 12px var(--cond);letter-spacing:.08em;color:var(--ink3);text-transform:uppercase}
 .cbh small.bad{color:var(--dn)}
-.cprof{display:grid;grid-template-columns:auto minmax(130px,1fr) 96px minmax(150px,1.4fr) 96px;gap:10px;align-items:end}
+.cprof{display:grid;grid-template-columns:auto minmax(150px,1fr) 120px;gap:12px 14px;align-items:end}
+.cprof .cf:nth-child(4){grid-column:1 / -1}
+.cprof .cf:nth-child(5){grid-column:auto}
 .cf{display:flex;flex-direction:column;gap:5px;min-width:0}
 .cf>label{font:700 11px var(--cond);letter-spacing:.16em;text-transform:uppercase;color:var(--ink3)}
 .cf>small{font:600 12px var(--cond);letter-spacing:.06em;color:var(--ink2);text-align:center}
 .cf .inp{height:38px;font-size:15px}
-.seg{display:flex;gap:4px}.seg .pc span{padding:8px 14px}
+.seg{display:flex;gap:10px;padding:0 4px}.seg .pc span{padding:9px 16px}
 .cin1{position:relative;display:block}
 .cin1 .inp{padding-right:30px}
 .cin1 i{position:absolute;right:9px;top:50%;transform:translateY(-50%);font:600 12px var(--cond);font-style:normal;letter-spacing:.06em;color:var(--ink3);pointer-events:none}
