@@ -553,6 +553,25 @@ label.btn{cursor:pointer;display:inline-block}
 .lsum b{font:italic 800 18px var(--cond);color:var(--cy);letter-spacing:.02em}
 .lbtn{display:flex;gap:8px}
 .lbtn .lfin span{padding:9px 20px}
+/* extra-compact set rows: fields sized for 3 digits */
+.lexs{grid-template-columns:repeat(auto-fill,minmax(272px,1fr));gap:8px}
+.live .lex{padding:6px 8px;gap:3px}
+.live .exh{gap:6px}
+.live .exh .inp{flex:0 1 66%;width:66%;height:28px;font-size:14px;padding:0 6px}
+.live .exh .pw{margin-left:auto;font-size:13px}
+.live .exh .x{width:26px;height:26px}
+.live .lst{grid-template-columns:16px 40px 50px 40px 40px 32px;gap:4px;justify-content:start}
+.live .lst.h{font-size:10px;letter-spacing:.04em}
+.live .lst.h span:last-child{white-space:nowrap}
+.live .lst.h .exp{font-size:10px}
+.live .lst .inp{height:30px;font-size:15px;padding:0 2px}
+.live .ok{height:30px}
+.live .ok svg{width:15px;height:15px}
+.live .sn{font-size:12px}
+.live .lrow{max-width:240px}
+.live .lrow .adds{height:24px;font-size:11px;letter-spacing:.08em}
+.live .lxadd{height:30px;font-size:12px}
+.live .lhn .h2{font-size:20px}
 /* rest timer pill */
 .restp{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:70;display:flex;align-items:center;gap:8px;padding:8px 8px 8px 12px;background:linear-gradient(120deg,#0f2740,#0a1422);border:1px solid rgba(var(--cyr),.5);box-shadow:0 18px 40px -16px rgba(var(--cyr),.7);clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%);animation:pop .3s cubic-bezier(.2,.9,.3,1.2)}
 .restp .rp{width:40px;height:40px;border-radius:50%;background:conic-gradient(var(--cy) var(--p),rgba(130,185,255,.15) 0);-webkit-mask:radial-gradient(circle,transparent 13px,#000 14px);mask:radial-gradient(circle,transparent 13px,#000 14px)}
@@ -654,6 +673,11 @@ label.btn{cursor:pointer;display:inline-block}
   .bn{outline:none;letter-spacing:0}
   .bn:focus-visible{outline:1px solid var(--cy);outline-offset:-2px}
   .lhn .h2{font-size:19px}
+  .live .lst{grid-template-columns:16px 46px 56px 46px 46px 38px;gap:5px}
+  .live .lst .inp{height:36px;font-size:16px}
+  .live .ok{height:36px}
+  .live .exh .inp{height:32px;font-size:16px}
+  .live .lrow{max-width:none}
   .lbot{gap:8px}.lbtn{width:100%}.lbtn .btn{flex:0 0 auto}.lbtn .lfin{flex:1}.lbtn .lfin span{justify-content:center}
   .lst.h{font-size:11px;letter-spacing:.1em}
   .lst .inp{height:48px;padding:0 2px;font-size:19px}
@@ -1306,7 +1330,7 @@ function liveCard() {
     <div class="lexs">${A2.ex.map((e, ei) => { const st = e.sets.filter(s => s.done); return `<div class="lex${e.sets.length && st.length === e.sets.length ? ' full' : ''}" data-lex="${ei}">
       <div class="exh"><input class="inp" data-lvn="${ei}" value="${esc(e.n)}" placeholder="Nazwa ćwiczenia" aria-label="Ćwiczenie"><span class="pw"><span data-lpw="${ei}">${fmt(sumBy(st, pwsOf), 1).replace(',0', '')}</span><small>PWS</small></span><button class="x" data-act="lvdelex" data-i="${ei}" aria-label="Usuń ćwiczenie">${svg('x', 12, 2.4)}</button></div>
       <div class="lst h"><span>#</span><span>Powt.</span><span>Kg</span><span>RIR</span><span>RPE</span><span>${e.plan ? `<em class="exp" title="plan">${esc(e.plan.s || '?')}×${esc(e.plan.r || '?')}</em>` : ''}</span></div>
-      ${e.sets.map((s, si) => `<div class="lst st${s.done ? ' done' : ''}"><span class="sn">${si + 1}</span><input class="inp c" data-lv="${ei}.${si}.r" value="${esc(s.r)}" placeholder="0" inputmode="numeric" aria-label="Powtórzenia"><input class="inp c" data-lv="${ei}.${si}.kg" value="${esc(s.kg)}" placeholder="0" inputmode="decimal" aria-label="Ciężar"><input class="inp c rr" data-rr="rir" data-lv="${ei}.${si}.rir" value="${esc(s.rir)}" placeholder="—" inputmode="decimal" aria-label="RIR"><input class="inp c rr" data-rr="rpe" data-lv="${ei}.${si}.rpe" value="${esc(s.rpe)}" placeholder="—" inputmode="decimal" aria-label="RPE"><button class="ok" data-act="lvdone" data-e="${ei}" data-i="${si}" aria-label="${s.done ? 'Cofnij serię' : 'Seria zrobiona'}" aria-pressed="${s.done}">${svg('check', 18, 3)}</button></div>`).join('')}
+      ${e.sets.map((s, si) => `<div class="lst st${s.done ? ' done' : ''}"><span class="sn">${si + 1}</span><input class="inp c" maxlength="3" data-lv="${ei}.${si}.r" value="${esc(s.r)}" placeholder="0" inputmode="numeric" aria-label="Powtórzenia"><input class="inp c" maxlength="5" data-lv="${ei}.${si}.kg" value="${esc(s.kg)}" placeholder="0" inputmode="decimal" aria-label="Ciężar"><input class="inp c rr" maxlength="3" data-rr="rir" data-lv="${ei}.${si}.rir" value="${esc(s.rir)}" placeholder="—" inputmode="decimal" aria-label="RIR"><input class="inp c rr" maxlength="3" data-rr="rpe" data-lv="${ei}.${si}.rpe" value="${esc(s.rpe)}" placeholder="—" inputmode="decimal" aria-label="RPE"><button class="ok" data-act="lvdone" data-e="${ei}" data-i="${si}" aria-label="${s.done ? 'Cofnij serię' : 'Seria zrobiona'}" aria-pressed="${s.done}">${svg('check', 18, 3)}</button></div>`).join('')}
       <div class="lrow"><button class="adds" data-act="lvaddset" data-e="${ei}">+ Seria</button>${e.sets.length > 1 ? `<button class="adds" data-act="lvdelset" data-e="${ei}">− Ostatnia</button>` : ''}</div>
     </div>`; }).join('')}</div>
     <button class="addrow lxadd" data-act="lvaddex">+ Dodaj ćwiczenie</button>
