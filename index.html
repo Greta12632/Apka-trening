@@ -290,7 +290,7 @@ select.inp{-webkit-appearance:none;appearance:none;padding-right:44px;background
 .adds{border:1px dashed var(--line2);background:transparent;color:var(--ink2);height:34px;font:italic 700 13px 'Saira Semi Condensed',var(--cond);letter-spacing:.12em;text-transform:uppercase}
 .adds:hover{border-color:var(--cy);color:var(--cy)}
 .pwsinfo{font-family:'Saira Semi Condensed',var(--body);font-size:12.5px;color:var(--ink2);margin:0}
-.tb.r{grid-template-columns:minmax(0,1.1fr) minmax(0,1.1fr) minmax(0,.8fr) minmax(0,.8fr) minmax(0,2fr) 38px}
+.tb.r{grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,2fr) 38px}
 .th{font:700 12px 'Saira Semi Condensed',var(--cond);letter-spacing:.22em;text-transform:uppercase;color:var(--ink3);padding-bottom:2px}
 .tr{padding-top:8px;border-top:1px solid var(--line)}
 .nb{width:30px;height:30px;display:flex;align-items:center;justify-content:center;background:var(--p3);font:italic 800 15px var(--cond);transform:skewX(-12deg)}
@@ -299,7 +299,7 @@ select.inp{-webkit-appearance:none;appearance:none;padding-right:44px;background
 .addrow{border:1.5px dashed var(--line2);background:transparent;color:var(--ink2);height:44px;font:italic 700 15px 'Saira Semi Condensed',var(--cond);letter-spacing:.12em;text-transform:uppercase;transition:all .2s}
 .addrow:hover{border-color:var(--cy);color:var(--cy)}
 .scrollx{overflow-x:auto}
-.ptbl{display:flex;flex-direction:column;gap:8px}.ptbl.pg{min-width:640px}.ptbl.pr2{min-width:760px}
+.ptbl{display:flex;flex-direction:column;gap:8px}.ptbl.pg{min-width:640px}.ptbl.pr2{min-width:520px}
 .tb.th>span,.lst.h>span{text-align:center}
 .tb.g.th>span:nth-child(2),.tb.r.th>span:nth-child(-n+2){text-align:center}
 .tb.g.tr>input:nth-child(2),.tb.r.tr>input:first-child{text-align:center}
@@ -590,8 +590,8 @@ body{-webkit-tap-highlight-color:transparent}
   .tb.g.tr>:nth-child(2){grid-column:1 / 5}
   .tb.g>.x,.tb.r>.x{order:1;width:34px;height:38px}
   .tb.g>:nth-child(n+3):not(.x),.tb.r>:nth-child(n+3):not(.x){order:2}
-  .tb.r{grid-template-columns:repeat(3,minmax(0,1fr)) 34px;gap:6px}
-  .tb.r>:nth-child(2){grid-column:span 2}
+  .tb.r{grid-template-columns:minmax(0,1fr) minmax(0,1fr) 34px;gap:6px}
+  .tb.r>:nth-child(3){grid-column:1 / 3}
   .tb.r.th>span:last-child{order:1}
   .tb.r .inp{text-align:center}
   .tb.r select.inp{text-align:center;text-align-last:center}
@@ -1390,7 +1390,7 @@ function archiveGoal(g, manual) {
 
 function curPlan() { const t = S.ptype, L = D.plans[t]; if (!L.length) L.push(t === 'gym' ? blank().plans.gym[0] : blank().plans.run[0]); if (D.act[t] >= L.length) D.act[t] = 0; return L[D.act[t]]; }
 function daySum(d) { const ex = d.rows.filter(r => r.ex.trim()).length; const s = sumBy(d.rows, r => num(r.s)); return ex + ' ' + plural(ex, 'ćwiczenie', 'ćwiczenia', 'ćwiczeń') + ' · ' + s + ' ' + plural(s, 'seria', 'serie', 'serii'); }
-function runSum(p) { return p.rows.length + ' ' + plural(p.rows.length, 'dzień', 'dni', 'dni') + ' · ' + fmt(sumBy(p.rows, r => num(r.km)), 1) + ' km'; }
+function runSum(p) { return p.rows.length + ' ' + plural(p.rows.length, 'dzień', 'dni', 'dni'); }
 function vPlan() {
   const t = S.ptype, P = curPlan();
   const top = `<section class="card c12">
@@ -1421,8 +1421,8 @@ function vPlan() {
     <section class="card c12">
       ${head('Plan biegowy', 'Tydzień biegowy', `<span class="dsum" data-sum="run">${runSum(P)}</span>`)}
       <div class="scrollx"><div class="ptbl pr2">
-        <div class="tb r th"><span>Dzień</span><span>Rodzaj</span><span>Km</span><span>Tempo /km</span><span>Notatka</span><span></span></div>
-        ${P.rows.map((r, ri) => `<div class="tb r tr"><input class="inp" data-pp="rows.${ri}.day" value="${esc(r.day)}" placeholder="np. Wtorek" aria-label="Dzień"><select class="inp" data-pp="rows.${ri}.type" aria-label="Rodzaj">${RTYPES.map(x => `<option${x === r.type ? ' selected' : ''}>${x}</option>`).join('')}</select><input class="inp c" data-pp="rows.${ri}.km" value="${esc(r.km)}" placeholder="0" inputmode="decimal" aria-label="Dystans"><input class="inp c" data-pp="rows.${ri}.pace" value="${esc(r.pace)}" placeholder="0:00" aria-label="Tempo"><input class="inp" data-pp="rows.${ri}.note" value="${esc(r.note)}" placeholder="Opcjonalnie" aria-label="Notatka"><button class="x" data-act="delrun" data-i="${ri}" aria-label="Usuń dzień">${svg('x', 13, 2.4)}</button></div>`).join('')}
+        <div class="tb r th"><span>Dzień</span><span>Rodzaj</span><span>Notatka</span><span></span></div>
+        ${P.rows.map((r, ri) => `<div class="tb r tr"><input class="inp" data-pp="rows.${ri}.day" value="${esc(r.day)}" placeholder="np. Wtorek" aria-label="Dzień"><select class="inp" data-pp="rows.${ri}.type" aria-label="Rodzaj">${RTYPES.map(x => `<option${x === r.type ? ' selected' : ''}>${x}</option>`).join('')}</select><input class="inp" data-pp="rows.${ri}.note" value="${esc(r.note)}" placeholder="Opcjonalnie" aria-label="Notatka"><button class="x" data-act="delrun" data-i="${ri}" aria-label="Usuń dzień">${svg('x', 13, 2.4)}</button></div>`).join('')}
         <button class="addrow" data-act="addrun">+ Dodaj dzień biegowy</button>
       </div></div>
     </section>
@@ -1778,13 +1778,13 @@ function mRun() {
   const m = S.m, P = D.plans.run[D.act.run] || D.plans.run[0];
   const rows = P ? P.rows : [];
   const body = `<div class="g2">
-    <label class="fld full">Dzień z planu „${esc(P ? P.name : '')}”<select class="inp" data-m="rday"><option value="-1">— bez planu —</option>${rows.map((r, i) => `<option value="${i}"${i === m.rday ? ' selected' : ''}>${esc(r.day || 'Dzień ' + (i + 1))} · ${esc(r.type)}${r.km ? ' · ' + esc(r.km) + ' km' : ''}</option>`).join('')}</select></label>
+    <label class="fld full">Dzień z planu „${esc(P ? P.name : '')}”<select class="inp" data-m="rday"><option value="-1">— bez planu —</option>${rows.map((r, i) => `<option value="${i}"${i === m.rday ? ' selected' : ''}>${esc(r.day || 'Dzień ' + (i + 1))} · ${esc(r.type)}</option>`).join('')}</select></label>
     <label class="fld">Rodzaj<select class="inp" data-m="type">${RTYPES.map(x => `<option${x === m.type ? ' selected' : ''}>${x}</option>`).join('')}</select></label>
     <label class="fld">Data<input class="inp" type="date" data-m="date" value="${m.date}"></label>
-    <label class="fld">Dystans (km)<input class="inp c" data-m="km" value="${esc(m.km)}" placeholder="${esc(m.kmPh || '0')}" inputmode="decimal"></label>
+    <label class="fld">Dystans (km)<input class="inp c" data-m="km" value="${esc(m.km)}" placeholder="0" inputmode="decimal"></label>
     <label class="fld">Czas<input class="inp c" data-m="time" value="${esc(m.time)}" placeholder="np. 42:40"></label>
   </div>
-  <div class="tot"><span>Tempo · <b data-tot="pace">${mmss(paceOf(m.km || m.kmPh, m.time))}</b> /km</span><span>${m.pacePh ? 'plan · ' + esc(m.pacePh) + ' /km' : ''}</span></div>`;
+  <div class="tot"><span>Tempo · <b data-tot="pace">${mmss(paceOf(m.km, m.time))}</b> /km</span></div>`;
   return dlg('Bieganie', m.editId ? 'Edytuj bieg' : 'Dodaj bieg', body, `${m.editId ? `<button class="btn del" data-act="delent" data-ty="run" data-id="${esc(m.editId)}"><span><em>Usuń</em></span></button>` : ""}<button class="btn pri" data-act="saver"><span><em>Zapisz bieg</em></span></button>`);
 }
 function mConfirm() {
@@ -2046,7 +2046,7 @@ const A = {
     checkGoals();
   },
   goplan: () => { closeModal(); S.ptype = 'gym'; go('plan'); },
-  saver: () => { const m = S.m, km = m.km || m.kmPh; if (!num(km)) { const i = document.querySelector('[data-m="km"]'); if (i) i.focus(); return; } const rec = { id: m.editId || uid(), k: m.date || todayK(), type: m.type, km: String(km).replace('.', ','), time: m.time || '' }; if (m.editId) { D.runs = D.runs.map(r => r.id === m.editId ? rec : r); S.dk = rec.k; save(); closeModal(); render(); toast('Zmiany zapisane', rec.type + ' · ' + rec.km + ' km', 'check'); checkGoals(); return; } D.runs.push(rec); save(); closeModal(); go('run'); toast('Bieg zapisany', rec.type + ' · ' + rec.km + ' km' + (rec.time ? ' · ' + mmss(paceOf(rec.km, rec.time)) + ' /km' : ''), 'check'); checkGoals(); },
+  saver: () => { const m = S.m, km = m.km; if (!num(km)) { const i = document.querySelector('[data-m="km"]'); if (i) i.focus(); return; } const rec = { id: m.editId || uid(), k: m.date || todayK(), type: m.type, km: String(km).replace('.', ','), time: m.time || '' }; if (m.editId) { D.runs = D.runs.map(r => r.id === m.editId ? rec : r); S.dk = rec.k; save(); closeModal(); render(); toast('Zmiany zapisane', rec.type + ' · ' + rec.km + ' km', 'check'); checkGoals(); return; } D.runs.push(rec); save(); closeModal(); go('run'); toast('Bieg zapisany', rec.type + ' · ' + rec.km + ' km' + (rec.time ? ' · ' + mmss(paceOf(rec.km, rec.time)) + ' /km' : ''), 'check'); checkGoals(); },
   savewt: () => {
     const m = S.m; if (!isNum(m.wt)) { const i = document.querySelector('[data-m="wt"]'); if (i) i.focus(); return; }
     const k = m.date || todayK(), prev = D.food.find(f => f.k === k) || { k };
@@ -2118,8 +2118,8 @@ function handleField(el) {
     }
     if (S.modal === 'workout' && (k === 'plan' || k === 'day')) { S.m[k] = +el.value; if (k === 'plan') S.m.day = 0; S.m.ex = exFromPlan(); renderModal(); }
     if (S.modal === 'run') {
-      if (k === 'rday') { const i = +el.value; S.m.rday = i; const P = D.plans.run[D.act.run] || D.plans.run[0]; const r = P && P.rows[i]; S.m.kmPh = r ? r.km : ''; S.m.pacePh = r ? r.pace : ''; if (r) S.m.type = r.type; renderModal(); }
-      else { const p = document.querySelector('[data-tot="pace"]'); if (p) p.textContent = mmss(paceOf(S.m.km || S.m.kmPh, S.m.time)); }
+      if (k === 'rday') { const i = +el.value; S.m.rday = i; const P = D.plans.run[D.act.run] || D.plans.run[0]; const r = P && P.rows[i];  if (r) S.m.type = r.type; renderModal(); }
+      else { const p = document.querySelector('[data-tot="pace"]'); if (p) p.textContent = mmss(paceOf(S.m.km, S.m.time)); }
     }
   }
 }
