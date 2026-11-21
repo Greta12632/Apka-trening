@@ -489,7 +489,7 @@ label.btn{cursor:pointer;display:inline-block}
 .linkb:hover{color:var(--cy)}
 .live{background:linear-gradient(160deg,rgba(var(--cyr),.10),var(--p1) 40%);box-shadow:inset 0 0 0 1px rgba(var(--cyr),.35)}
 .live .k{display:flex;align-items:center;gap:8px;color:var(--cy)}
-.rec{width:9px;height:9px;border-radius:50%;background:var(--dn);box-shadow:0 0 0 0 rgba(251,113,133,.6);animation:recp 1.6s infinite}
+.recdot{flex-shrink:0;width:9px;height:9px;border-radius:50%;background:var(--dn);box-shadow:0 0 0 0 rgba(251,113,133,.6);animation:recp 1.6s infinite}
 @keyframes recp{0%{box-shadow:0 0 0 0 rgba(251,113,133,.6)}70%{box-shadow:0 0 0 8px rgba(251,113,133,0)}100%{box-shadow:0 0 0 0 rgba(251,113,133,0)}}
 .lclock b{font:italic 800 16px var(--cond);color:var(--ink);letter-spacing:.04em}
 .lclock span{display:inline-flex;align-items:center;gap:6px}
@@ -525,6 +525,34 @@ label.btn{cursor:pointer;display:inline-block}
 .lmstats b{font:italic 800 19px var(--cond);color:var(--ink);letter-spacing:.02em}
 .lmact{display:flex;gap:8px}
 .live.mini .lpbar{height:6px}
+/* compact live workout */
+.live:not(.mini){gap:10px;padding:16px 18px}
+.lhd{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.lhn{flex:1 1 auto;min-width:0}
+.lhn .h2{font-size:22px}
+.lhs{display:flex;gap:14px;font:600 12px var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--ink2)}
+.lhs span{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}
+.lhs b{font:italic 800 18px var(--cond);color:var(--ink);letter-spacing:.02em;font-variant-numeric:tabular-nums}
+.live .lpbar{height:5px}
+.lexs{display:grid;grid-template-columns:repeat(auto-fill,minmax(420px,1fr));gap:10px}
+.live .lex{padding:8px 10px;gap:5px}
+.live .exh{gap:8px}
+.live .exh .inp{height:32px;font-size:15px;padding:0 8px}
+.live .exh .x{width:30px;height:30px}
+.live .exh .pw{font-size:14px}
+.live .lst{grid-template-columns:22px repeat(4,minmax(0,1fr)) 40px;gap:5px;max-width:none}
+.live .lst.h{font-size:11px;letter-spacing:.12em}
+.live .lst.h .exp{font:600 11px var(--cond);font-style:normal;letter-spacing:.06em;color:var(--ink3);text-transform:none}
+.live .lst .inp{height:34px;font-size:16px;padding:0 4px}
+.live .ok{height:34px}
+.live .sn{font-size:14px}
+.live .lrow .adds{height:28px;font-size:12px}
+.live .lxadd{height:36px;font-size:13px}
+.lbot{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-top:4px;border-top:1px solid var(--line)}
+.lsum{font:600 13px var(--cond);letter-spacing:.12em;text-transform:uppercase;color:var(--ink2)}
+.lsum b{font:italic 800 18px var(--cond);color:var(--cy);letter-spacing:.02em}
+.lbtn{display:flex;gap:8px}
+.lbtn .lfin span{padding:9px 20px}
 /* rest timer pill */
 .restp{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:70;display:flex;align-items:center;gap:8px;padding:8px 8px 8px 12px;background:linear-gradient(120deg,#0f2740,#0a1422);border:1px solid rgba(var(--cyr),.5);box-shadow:0 18px 40px -16px rgba(var(--cyr),.7);clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%);animation:pop .3s cubic-bezier(.2,.9,.3,1.2)}
 .restp .rp{width:40px;height:40px;border-radius:50%;background:conic-gradient(var(--cy) var(--p),rgba(130,185,255,.15) 0);-webkit-mask:radial-gradient(circle,transparent 13px,#000 14px);mask:radial-gradient(circle,transparent 13px,#000 14px)}
@@ -598,7 +626,7 @@ label.btn{cursor:pointer;display:inline-block}
   .bn.on{color:var(--cy)}
   .bn.on svg{transform:translateY(-2px) scale(1.08);filter:drop-shadow(0 0 8px rgba(var(--cyr),.6))}
   .bn.on::after{content:"";position:absolute;top:-6px;left:28%;right:28%;height:3px;background:var(--grad);transform:skewX(-30deg)}
-  .bn.live::before{content:"";position:absolute;top:4px;right:calc(50% - 18px);width:8px;height:8px;border-radius:50%;background:var(--dn);animation:recp 1.6s infinite}
+  .bn.onlive::before{content:"";position:absolute;top:4px;right:calc(50% - 18px);width:8px;height:8px;border-radius:50%;background:var(--dn);animation:recp 1.6s infinite}
   .fab{display:flex;position:fixed;right:16px;bottom:calc(84px + env(safe-area-inset-bottom));z-index:41;width:58px;height:58px;border:0;padding:0;background:var(--grad);color:#03121c;align-items:center;justify-content:center;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,0 100%);box-shadow:0 14px 30px -10px var(--cy);animation:pop .35s cubic-bezier(.3,1.5,.5,1)}
   .fab:active{scale:.92}
   .restp{bottom:calc(84px + env(safe-area-inset-bottom));max-width:calc(100vw - 24px)}
@@ -610,7 +638,23 @@ label.btn{cursor:pointer;display:inline-block}
   .dayb b{font-size:19px}
   .dayb svg{right:10px}
   .lex{padding:10px;margin:0 -4px}
-  .lst{grid-template-columns:20px repeat(4,minmax(0,1fr)) 46px;gap:5px}
+  .live .lst{grid-template-columns:18px repeat(4,minmax(0,1fr)) 40px;gap:4px}
+  .lexs{grid-template-columns:1fr;gap:8px}
+  .live:not(.mini){padding:12px}
+  .live .lex{margin:0;padding:8px}
+  .live .lst .inp{height:40px;font-size:17px}
+  .live .ok{height:40px}
+  .lhs{gap:10px}
+  .lhd{flex-wrap:nowrap;gap:8px}
+  .lhn .k{font-size:10px}
+  .lhs{flex-direction:column;gap:0;align-items:flex-end}
+  .lhs b{font-size:16px}
+  .lminb em{display:none}
+  .lminb span{padding:8px 10px}
+  .bn{outline:none;letter-spacing:0}
+  .bn:focus-visible{outline:1px solid var(--cy);outline-offset:-2px}
+  .lhn .h2{font-size:19px}
+  .lbot{gap:8px}.lbtn{width:100%}.lbtn .btn{flex:0 0 auto}.lbtn .lfin{flex:1}.lbtn .lfin span{justify-content:center}
   .lst.h{font-size:11px;letter-spacing:.1em}
   .lst .inp{height:48px;padding:0 2px;font-size:19px}
   .ok{height:48px}
@@ -1246,25 +1290,27 @@ function liveCard() {
   const bar = `<div class="pbar lpbar"><i data-lt="bar" style="width:${T.all ? T.done / T.all * 100 : 0}%"></i></div>`;
   if (A2.min) return `<section class="card c12 live mini" id="live">
     <div class="lmini">
-      <button class="lmhead" data-act="lvmin" aria-label="Rozwiń dzisiejszy trening"><span class="k"><i class="rec"></i>Trening w trakcie</span><b>${esc(A2.name)}</b></button>
+      <button class="lmhead" data-act="lvmin" aria-label="Rozwiń dzisiejszy trening"><span class="k"><i class="recdot"></i>Trening w trakcie</span><b>${esc(A2.name)}</b></button>
       <div class="lmstats"><span>${svg('timer', 13, 2.4)}<b data-clock>${clock(Date.now() - A2.startedAt)}</b></span><span><b data-lt="done">${T.done}</b>/<span data-lt="all">${T.all}</span> serii</span><span><b data-lt="pws">${fmt(T.pws, 1).replace(',0', '')}</b> PWS</span></div>
       <div class="lmact"><button class="btn" data-act="lvmin"><span>${svg('down', 14, 2.4)}<em>Rozwiń</em></span></button><button class="btn pri" data-act="lvfinish"><span>${svg('check', 14, 3)}<em>Zakończ</em></span></button></div>
     </div>
     ${bar}
   </section>`;
   return `<section class="card c12 live" id="live">
-    <div class="hd"><div><span class="k"><i class="rec"></i>Dzisiejszy trening · w trakcie</span><h2 class="h2">${esc(A2.name)}</h2></div><div class="lhact"><span class="chip lclock"><span>${svg('timer', 13, 2.4)} <b data-clock>${clock(Date.now() - A2.startedAt)}</b></span></span><button class="btn lminb" data-act="lvmin" aria-label="Zwiń dzisiejszy trening"><span>${svg('up', 14, 2.4)}<em>Zwiń</em></span></button></div></div>
-    <div><div class="pl"><span>Zrobione serie</span><span><b data-lt="done">${T.done}</b> / <span data-lt="all">${T.all}</span></span></div><div class="pbar lpbar"><i data-lt="bar" style="width:${T.all ? T.done / T.all * 100 : 0}%"></i></div></div>
-    ${A2.ex.map((e, ei) => { const st = e.sets.filter(s => s.done); return `<div class="lex${e.sets.length && st.length === e.sets.length ? ' full' : ''}" data-lex="${ei}">
-      <div class="exh"><input class="inp" data-lvn="${ei}" value="${esc(e.n)}" placeholder="Nazwa ćwiczenia" aria-label="Ćwiczenie"><span class="pw"><span data-lpw="${ei}">${fmt(sumBy(st, pwsOf), 1).replace(',0', '')}</span><small>PWS</small></span><button class="x" data-act="lvdelex" data-i="${ei}" aria-label="Usuń ćwiczenie">${svg('x', 13, 2.4)}</button></div>
-      ${e.plan ? `<span class="exp">plan: ${esc(e.plan.s || '?')} × ${esc(e.plan.r || '?')}${e.plan.kg ? ' · ' + esc(e.plan.kg) + ' kg' : ''}${isNum(e.plan.rir) ? ' · RIR ' + esc(e.plan.rir) : ''}</span>` : ''}
-      <div class="lst h"><span>#</span><span>Powt.</span><span>Kg</span><span>RIR</span><span>RPE</span><span></span></div>
-      ${e.sets.map((s, si) => `<div class="lst st${s.done ? ' done' : ''}"><span class="sn">${si + 1}</span><input class="inp c" data-lv="${ei}.${si}.r" value="${esc(s.r)}" placeholder="0" inputmode="numeric" aria-label="Powtórzenia"><input class="inp c" data-lv="${ei}.${si}.kg" value="${esc(s.kg)}" placeholder="0" inputmode="decimal" aria-label="Ciężar"><input class="inp c rr" data-rr="rir" data-lv="${ei}.${si}.rir" value="${esc(s.rir)}" placeholder="—" inputmode="decimal" aria-label="RIR"><input class="inp c rr" data-rr="rpe" data-lv="${ei}.${si}.rpe" value="${esc(s.rpe)}" placeholder="—" inputmode="decimal" aria-label="RPE"><button class="ok" data-act="lvdone" data-e="${ei}" data-i="${si}" aria-label="${s.done ? 'Cofnij serię' : 'Seria zrobiona'}" aria-pressed="${s.done}">${svg('check', 20, 3)}</button></div>`).join('')}
+    <div class="lhd">
+      <div class="lhn"><span class="k"><i class="recdot"></i>W trakcie</span><h2 class="h2">${esc(A2.name)}</h2></div>
+      <div class="lhs"><span>${svg('timer', 13, 2.4)}<b data-clock>${clock(Date.now() - A2.startedAt)}</b></span><span><b data-lt="done">${T.done}</b>/<span data-lt="all">${T.all}</span> serii</span></div>
+      <button class="btn lminb" data-act="lvmin" aria-label="Zwiń dzisiejszy trening"><span>${svg('up', 14, 2.4)}<em>Zwiń</em></span></button>
+    </div>
+    ${bar}
+    <div class="lexs">${A2.ex.map((e, ei) => { const st = e.sets.filter(s => s.done); return `<div class="lex${e.sets.length && st.length === e.sets.length ? ' full' : ''}" data-lex="${ei}">
+      <div class="exh"><input class="inp" data-lvn="${ei}" value="${esc(e.n)}" placeholder="Nazwa ćwiczenia" aria-label="Ćwiczenie"><span class="pw"><span data-lpw="${ei}">${fmt(sumBy(st, pwsOf), 1).replace(',0', '')}</span><small>PWS</small></span><button class="x" data-act="lvdelex" data-i="${ei}" aria-label="Usuń ćwiczenie">${svg('x', 12, 2.4)}</button></div>
+      <div class="lst h"><span>#</span><span>Powt.</span><span>Kg</span><span>RIR</span><span>RPE</span><span>${e.plan ? `<em class="exp" title="plan">${esc(e.plan.s || '?')}×${esc(e.plan.r || '?')}</em>` : ''}</span></div>
+      ${e.sets.map((s, si) => `<div class="lst st${s.done ? ' done' : ''}"><span class="sn">${si + 1}</span><input class="inp c" data-lv="${ei}.${si}.r" value="${esc(s.r)}" placeholder="0" inputmode="numeric" aria-label="Powtórzenia"><input class="inp c" data-lv="${ei}.${si}.kg" value="${esc(s.kg)}" placeholder="0" inputmode="decimal" aria-label="Ciężar"><input class="inp c rr" data-rr="rir" data-lv="${ei}.${si}.rir" value="${esc(s.rir)}" placeholder="—" inputmode="decimal" aria-label="RIR"><input class="inp c rr" data-rr="rpe" data-lv="${ei}.${si}.rpe" value="${esc(s.rpe)}" placeholder="—" inputmode="decimal" aria-label="RPE"><button class="ok" data-act="lvdone" data-e="${ei}" data-i="${si}" aria-label="${s.done ? 'Cofnij serię' : 'Seria zrobiona'}" aria-pressed="${s.done}">${svg('check', 18, 3)}</button></div>`).join('')}
       <div class="lrow"><button class="adds" data-act="lvaddset" data-e="${ei}">+ Seria</button>${e.sets.length > 1 ? `<button class="adds" data-act="lvdelset" data-e="${ei}">− Ostatnia</button>` : ''}</div>
-    </div>`; }).join('')}
-    <button class="addrow" data-act="lvaddex">+ Dodaj ćwiczenie</button>
-    <div class="tot"><span>Tonaż · <b data-lt="ton">${fmt(T.ton)}</b> kg</span><span>PWS · <b data-lt="pws">${fmt(T.pws, 1).replace(',0', '')}</b></span></div>
-    <div class="foot lfoot"><button class="btn del" data-act="lvcancel"><span><em>Przerwij</em></span></button><button class="btn pri lfin" data-act="lvfinish"><span>${svg('check', 16, 3)}<em>Zakończ trening</em></span></button></div>
+    </div>`; }).join('')}</div>
+    <button class="addrow lxadd" data-act="lvaddex">+ Dodaj ćwiczenie</button>
+    <div class="lbot"><span class="lsum">Tonaż <b data-lt="ton">${fmt(T.ton)}</b> kg · PWS <b data-lt="pws">${fmt(T.pws, 1).replace(',0', '')}</b></span><div class="lbtn"><button class="btn del" data-act="lvcancel"><span><em>Przerwij</em></span></button><button class="btn pri lfin" data-act="lvfinish"><span>${svg('check', 15, 3)}<em>Zakończ trening</em></span></button></div></div>
   </section>`;
 }
 function startCard() {
@@ -1444,7 +1490,7 @@ function render() {
   const v = VIEWS.find(x => x[0] === S.view) || VIEWS[0];
   document.querySelector('.ico[data-act="goals"]').classList.toggle('on', S.view === 'goals');
   document.getElementById('tabs').innerHTML = VIEWS.filter(x => x[0] !== 'goals').map(x => `<button class="tab${x[0] === S.view ? ' on' : ''}" data-act="view" data-v="${x[0]}"${x[0] === S.view ? ' aria-current="page"' : ''}><span><em>${x[1]}</em></span></button>`).join('');
-  document.getElementById('bnav').innerHTML = Object.keys(NAVI).map(k => `<button class="bn${k === S.view ? ' on' : ''}${k === 'gym' && D.active ? ' live' : ''}" data-act="view" data-v="${k}"${k === S.view ? ' aria-current="page"' : ''}>${svg(NAVI[k], 22, 2)}<span>${NAVL[k]}</span></button>`).join('');
+  document.getElementById('bnav').innerHTML = Object.keys(NAVI).map(k => `<button class="bn${k === S.view ? ' on' : ''}${k === 'gym' && D.active ? ' onlive' : ''}" data-act="view" data-v="${k}"${k === S.view ? ' aria-current="page"' : ''}>${svg(NAVI[k], 22, 2)}<span>${NAVL[k]}</span></button>`).join('');
   const now = new Date();
   document.getElementById('wk').innerHTML = `Tydz. <b>${isoWeek(now)}</b> · ${now.getDate()} ${MON[now.getMonth()]}`;
   const label = v[0] === 'gym' ? (D.active ? 'Trening trwa' : 'Rozpocznij trening') : v[3];
