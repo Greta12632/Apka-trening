@@ -137,6 +137,11 @@ button{cursor:pointer}
 .score b{font:italic 700 26px/1 var(--cond)}
 .up{color:var(--teal)}.dn{color:var(--dn)}
 
+.mtile{padding:14px 16px;gap:6px;justify-content:center;min-height:0}
+.mtile::before{width:22px}
+.mtile .mk{font:700 11px var(--cond);letter-spacing:.18em;text-transform:uppercase;color:var(--ink3)}
+.mtile b{font:italic 800 28px/1 var(--cond);letter-spacing:.01em}
+@media (max-width:760px){.mtile{padding:12px}.mtile b{font-size:23px}.mtile .mk{font-size:10px;letter-spacing:.12em}}
 .stat4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;padding:14px 18px}
 .stat4::before{display:none}
 .stat4>div{display:flex;flex-direction:column;gap:4px;padding:2px 16px;border-left:1px solid var(--line)}
@@ -174,7 +179,7 @@ button{cursor:pointer}
 .dt{display:flex;flex-direction:column;align-items:center;justify-content:center;height:46px;background:var(--p3);transform:skewX(-10deg)}
 .dt b,.dt span{transform:skewX(10deg)}
 .dt b{font:italic 800 22px/1 var(--cond)}
-.dt span{font:700 12px var(--cond);letter-spacing:.16em;color:var(--ink2);text-transform:uppercase}
+.dt span{font:italic 700 12px var(--cond);letter-spacing:.16em;color:var(--ink2);text-transform:uppercase}
 .rn{font:700 17px var(--cond);letter-spacing:.04em;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .rm{font:500 13px var(--body);color:var(--ink2)}
 .rv{font:italic 800 22px var(--cond);text-align:right;white-space:nowrap}
@@ -423,10 +428,10 @@ select.inp option{background:#0b1421;color:var(--ink)}
 .medalc:hover .mact,.medalc:focus-within .mact{opacity:1}
 .medals{display:flex;flex-direction:row;flex-wrap:wrap;justify-content:center;align-items:flex-start;gap:22px 26px;padding:22px 16px}
 .medal{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;width:136px}
-.mring{position:relative;width:126px;height:126px;filter:drop-shadow(0 8px 20px rgba(var(--cyr),.25))}
+.mring{position:relative;width:126px;height:126px;filter:drop-shadow(0 8px 22px rgba(251,191,36,.28))}
 .mring svg{width:100%;height:100%}
-.mring .arc{animation:arc 1.4s cubic-bezier(.2,.8,.2,1) .15s both;filter:drop-shadow(0 0 6px rgba(var(--cyr),.6))}
-.min{position:absolute;inset:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:var(--cy);overflow:hidden}
+.mring .arc{animation:arc 1.4s cubic-bezier(.2,.8,.2,1) .15s both;filter:drop-shadow(0 0 7px rgba(251,191,36,.65))}
+.min{position:absolute;inset:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;color:#fbbf24;overflow:hidden}
 .min svg{width:15px;height:15px;flex-shrink:0}
 .min b{font:italic 800 12.5px/1.1 var(--cond);text-transform:uppercase;color:var(--ink);letter-spacing:.02em;max-width:100%;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;word-break:break-word}
 .min small{font:700 10px var(--cond);letter-spacing:.06em;color:var(--cy);text-transform:uppercase;white-space:nowrap;max-width:100%;overflow:hidden;text-overflow:ellipsis}
@@ -908,7 +913,7 @@ const addDays = (d, n) => { const x = new Date(d.getFullYear(), d.getMonth(), d.
 const weekStart = d => addDays(d, -((d.getDay() + 6) % 7));
 const isoWeek = d => { const t = new Date(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate())); const day = t.getUTCDay() || 7; t.setUTCDate(t.getUTCDate() + 4 - day); const y = new Date(Date.UTC(t.getUTCFullYear(), 0, 1)); return Math.ceil(((t - y) / 864e5 + 1) / 7); };
 const num = x => { const v = parseFloat(String(x == null ? '' : x).replace(/\s/g, '').replace(',', '.').replace('+', '')); return isNaN(v) ? 0 : v; };
-const fmt = (x, d = 0) => { const s = Math.abs(x).toFixed(d).split('.'); s[0] = s[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' '); return (x < 0 ? '−' : '') + s.join(','); };
+const fmt = (x, d = 0) => { let s = Math.abs(x).toFixed(d).split('.'); if (s[1] && /^0+$/.test(s[1])) s = [s[0]]; s[0] = s[0].replace(/\B(?=(\d{3})+(?!\d))/g, ' '); return (x < 0 ? '−' : '') + s.join(','); };
 const esc = s => String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' }[c]));
 const sumBy = (a, f) => a.reduce((s, x) => s + f(x), 0);
 const inR = (k, s, e) => { const d = dOf(k); return d >= s && d < e; };
@@ -1080,6 +1085,7 @@ const sgn = (v, d = 1) => (v > 0 ? '+' : '') + fmt(v, d) + '%';
 const head = (k, h, right = '') => { const fk = S.view + ':' + (S.hk = (S.hk || 0) + 1); return `<div class="hd"><div><span class="k">${k}</span>${h ? `<h2 class="h2">${h}</h2>` : ''}</div><div class="hdr">${right}<button class="fold" data-act="fold" data-fk="${esc(fk)}" aria-label="Zwiń kartę" aria-expanded="true" title="Zwiń / rozwiń">${svg('chev', 14, 2.4)}</button></div></div>`; };
 function applyFolds() { const F = D.prefs.folds || {}; document.querySelectorAll('#app [data-fk]').forEach(b => { if (F[b.dataset.fk]) { const c = b.closest('.card'); if (c) c.classList.add('folded'); b.setAttribute('aria-expanded', 'false'); } }); }
 const tile = (k, v, s, cls = '') => `<section class="card tile c3 ${cls}"><span class="k">${k}</span><span class="tv">${v}</span><span class="ts">${s || '&nbsp;'}</span></section>`;
+const mtile = (k, v, cls = '') => `<section class="card c3 mtile"><span class="mk">${k}</span><b class="${cls}">${v}</b></section>`;
 const dateBox = k => { const x = dShort(k); return `<div class="dt"><b>${x.d}</b><span>${x.m}</span></div>`; };
 
 /* ---------- stats ---------- */
@@ -1172,22 +1178,20 @@ function vGym() {
       ${head('Progres siły', 'Zmiana szac. 1RM')}
       ${lineChart(sPts, { zero: true })}
     </section>
-    <section class="card c12 stat4">
-      <div><span>PWS · tydzień</span><b>${N(cur.pws)}</b></div>
-      <div><span>PWS / seria</span><b>${N(pwsPerSet, 1)}</b></div>
-      <div><span>Serii / trening</span><b>${N(spw, 1)}</b></div>
-      <div><span>Tonaż · tydzień</span><b class="${prevSame.ton ? (dTon >= 0 ? 'up' : 'dn') : ''}">${prevSame.ton ? sgn(dTon) : '—'}</b></div>
-    </section>
+    ${mtile('PWS · tydzień', N(cur.pws))}
+    ${mtile('PWS / seria', N(pwsPerSet, 1))}
+    ${mtile('Serii / trening', N(spw, 1))}
+    ${mtile('Tonaż · tydzień', prevSame.ton ? sgn(dTon) : '—', prevSame.ton ? (dTon >= 0 ? 'up' : 'dn') : '')}
     <section class="card c5">
       ${head('Ćwiczenia', 'Szac. 1RM w %')}
-      <div class="split">${ST.list.length ? ST.list.slice(0, 7).map(p => `<div class="sp"><div class="pl"><span>${esc(p.n)}</span><b class="${p.v >= 0 ? 'up' : 'dn'}">${sgn(p.v)}</b></div><div class="pbar"><i style="width:${Math.abs(p.v) / maxS * 100}%;${p.v < 0 ? 'background:var(--dn);box-shadow:0 0 12px var(--dn)' : ''}"></i></div><div class="spm">${fmt(p.first)} → <b>${fmt(p.cur)} kg</b></div></div>`).join('') : '<div class="empty">Za mało treningów</div>'}</div>
+      <div class="split">${ST.list.length ? ST.list.slice(0, 7).map(p => `<div class="sp"><div class="pl"><span>${esc(p.n)}</span><b class="${p.v >= 0 ? 'up' : 'dn'}">${sgn(p.v)}</b></div><div class="pbar"><i style="width:${Math.abs(p.v) / maxS * 100}%;${p.v < 0 ? 'background:var(--dn);box-shadow:0 0 12px var(--dn)' : ''}"></i></div><div class="spm">${fmt(p.first)} kg → <b>${fmt(p.cur)} kg</b></div></div>`).join('') : '<div class="empty">Za mało treningów</div>'}</div>
     </section>
     <section class="card c7">
-      ${head('Objętość', 'Zmiana tonażu tydzień do tygodnia', `<span class="chip"><span>ostatni: ten sam okres</span></span>`)}
+      ${head('Objętość', 'Zmiana tonażu')}
       ${dbars(chg)}
     </section>
     <section class="card c7">
-      ${head('Bodziec', 'PWS tygodniowo · 8 tyg.', `<span class="chip"><span>śr. ${fmt(sumBy(pwsWeeks.slice(0, 7), w => w.v) / 7)} / tydz.</span></span>`)}
+      ${head('Bodziec', 'PWS', `<span class="chip"><span>śr. ${fmt(sumBy(pwsWeeks.slice(0, 7), w => w.v) / 7)}</span></span>`)}
       ${bars(pwsWeeks)}
     </section>
     <section class="card c5">
@@ -1196,7 +1200,7 @@ function vGym() {
     </section>
     <section class="card c12">
       ${head('Historia', 'Ostatnie treningi', '<span class="chip"><span>tonaż vs poprzedni taki sam</span></span>')}
-      <div class="list">${hist.length ? hist.map(w => { const p = prevSameName(w), d = p && p.ton ? pct(w.ton, p.ton) : null; return `<div class="row tap" data-act="editent" data-ty="gym" data-id="${esc(w.id)}">${dateBox(w.k)}<div><div class="rn">${esc(w.n)} ${prIds.has(w.id) ? '<span class="badge">PR</span>' : ''}</div><div class="rm">${w.sets} ${plural(w.sets, 'seria', 'serie', 'serii')} · ${fmt(w.pws || 0)} PWS · ${fmt(w.ton)} kg${w.dur ? " · " + clock(w.dur * 1000) : ""}</div></div><span></span><span class="rv ${d == null ? '' : d >= 0 ? 'up' : 'dn'}">${d == null ? '—' : sgn(d)}</span></div>`; }).join('') : '<div class="empty">Brak treningów</div>'}</div>
+      <div class="list">${hist.length ? hist.map(w => { const p = prevSameName(w), d = p && p.ton ? pct(w.ton, p.ton) : null; return `<div class="row tap" data-act="editent" data-ty="gym" data-id="${esc(w.id)}">${dateBox(w.k)}<div><div class="rn">${esc(w.n)}</div><div class="rm">${w.sets} ${plural(w.sets, 'seria', 'serie', 'serii')} · ${fmt(w.pws || 0)} PWS · ${fmt(w.ton)} kg${w.dur ? " · " + clock(w.dur * 1000) : ""}</div></div><span></span><span class="rv ${d == null ? '' : d >= 0 ? 'up' : 'dn'}">${d == null ? '—' : sgn(d)}</span></div>`; }).join('') : '<div class="empty">Brak treningów</div>'}</div>
     </section>
   </div>`;
 }
@@ -1224,17 +1228,17 @@ function vRun() {
     <section class="card hero c5">
       ${head('Kilometry · ' + MONN[now.getMonth()].toLowerCase())}
       <div class="big"><b>${N(mKm, 1)}</b><small>km</small></div>
-      <div><div class="pl"><span>vs cały ${MONN[pStart.getMonth()].toLowerCase()}</span><span>${pFull ? fmt(mKm / pFull * 100) + '%' : '—'}</span></div><div class="pbar"><i style="width:${pFull ? Math.min(100, mKm / pFull * 100) : 0}%"></i></div></div>
-      <div class="score"><div><span>Zmiana procentowa</span><b class="${dM >= 0 ? 'up' : 'dn'}">${pSame ? sgn(dM) : '—'}</b></div><div><span>Biegi</span><b>${N(mR.length)}</b></div><div><span>Czas</span><b>${mmss(mSec)}</b></div></div>
+      <div><div class="pl"><span>VS poprzedni miesiąc</span><span>${pFull ? fmt(mKm / pFull * 100) + '%' : '—'}</span></div><div class="pbar"><i style="width:${pFull ? Math.min(100, mKm / pFull * 100) : 0}%"></i></div></div>
+      <div class="score"><div><span>Zmiana</span><b class="${dM >= 0 ? 'up' : 'dn'}">${pSame ? sgn(dM) : '—'}</b></div><div><span>Biegi</span><b>${N(mR.length)}</b></div><div><span>Czas biegu</span><b>${mmss(mSec)}</b></div></div>
     </section>
     <section class="card c7">
-      ${head('Kilometraż', 'Miesiąc do miesiąca', `<span class="chip"><span>${MON[pStart.getMonth()]}: ${fmt(pFull, 1)} km</span></span>`)}
+      ${head('Objętość', 'Kilometraż', `<span class="chip"><span>${MON[pStart.getMonth()]}: ${fmt(pFull, 1)} km</span></span>`)}
       ${bars(months.map(m => ({ v: m.km, val: fmt(m.km, 1) + ' km', label: m.label, tip: fmt(m.km, 1) + ' km · ' + m.n + ' ' + plural(m.n, 'bieg', 'biegi', 'biegów') })), { subs: months.map((m, i) => { const p = months[i - 1]; if (!p || !p.km || !m.km) return { t: '—' }; const v = pct(m.km, p.km); return { t: sgn(v, 0), c: v >= 0 ? 'up' : 'dn' }; }) })}
     </section>
-    ${tile('Szac. czas · 5 km', b5 ? mmss(b5.t) : '—', b5 ? 'najlepsze tempo · ' + dShort(b5.k).d + ' ' + dShort(b5.k).m : 'brak biegu ≥ 5 km', 'rec')}
-    ${tile('Szac. czas · 10 km', b10 ? mmss(b10.t) : '—', b10 ? 'najlepsze tempo · ' + dShort(b10.k).d + ' ' + dShort(b10.k).m : 'brak biegu ≥ 10 km', 'rec')}
-    ${tile('Najdłuższy bieg', longest ? N(num(longest.km), 1) + '<small>km</small>' : '—', longest ? esc(longest.type) + ' · ' + dShort(longest.k).d + ' ' + dShort(longest.k).m : '', 'hot')}
-    ${tile('Śr. tempo · 30 dni', mmss(avgP) + '<small>/km</small>', r30.length + ' ' + plural(r30.length, 'bieg', 'biegi', 'biegów'))}
+    ${mtile('Szac. czas · 5 km', b5 ? mmss(b5.t) : '—')}
+    ${mtile('Szac. czas · 10 km', b10 ? mmss(b10.t) : '—')}
+    ${mtile('Najdłuższy bieg', longest ? fmt(num(longest.km), 1) + ' km' : '—')}
+    ${mtile('Śr. tempo · 30 dni', avgP ? mmss(avgP) + ' /km' : '—')}
     <section class="card c5">
       ${head('Struktura · ' + MONN[now.getMonth()].toLowerCase(), 'Rodzaje biegów')}
       <div class="split">${types.length ? types.map(x => `<div class="sp"><div class="pl"><span>${x.t}</span><b>${x.n} ${plural(x.n, 'bieg', 'biegi', 'biegów')} <small class="spk">· ${fmt(x.km, 1)} km</small></b></div><div class="pbar"><i style="width:${x.n / maxN * 100}%;background:${RCOL[x.t]};box-shadow:0 0 12px ${RCOL[x.t]}"></i></div></div>`).join('') : '<div class="empty">Brak biegów</div>'}</div>
@@ -1289,7 +1293,7 @@ function vFood() {
   return `<div class="grid">
     ${kcalHero}
     <section class="card c6">
-      ${head('Historia', 'Kalorie · 7 dni')}
+      ${head('Historia', 'Kalorie')}
       ${bars(days, { goal: gk, goalTxt: 'cel ' + fmt(gk), h: 210 })}
     </section>
     <section class="card hero c5">
@@ -1299,7 +1303,7 @@ function vFood() {
       <div class="score"><div><span>7 dni</span><b>${WL.length ? kd(w7) : '—'}</b></div><div><span>30 dni</span><b>${WL.length ? kd(w30) : '—'}</b></div><div><span>Od startu</span><b>${WL.length ? kd(wAll) : '—'}</b></div></div>
     </section>
     <section class="card c7">
-      ${head('Trend', 'Waga · 60 dni', `<span class="chip"><span>${WL.length} ${plural(WL.length, 'pomiar', 'pomiary', 'pomiarów')}</span></span>`)}
+      ${head('Trend', 'Waga', `<span class="chip"><span>${WL.length} ${plural(WL.length, 'pomiar', 'pomiary', 'pomiarów')}</span></span>`)}
       ${lineChart(W60, wGoal ? { goal: num(wGoal.target), goalTxt: 'cel ' + esc(wGoal.target) + ' kg' } : {})}
     </section>
     ${tile('Śr. kalorie · 7 dni', N(avgK) + '<small>kcal</small>', logged.length + ' / 7 dni z wpisem')}
@@ -1339,7 +1343,7 @@ function vGoals() {
   if (tab === 'ach') return `<div class="grid">${tabs}
     ${arch.length ? arch.map(({ g, i }) => `<section class="card c12 medalc">
       <div class="mact"><button class="x" data-act="medalback" data-i="${i}" aria-label="Przywróć do aktywnych" title="Przywróć do aktywnych">${svg('up', 13, 2.2)}</button><button class="x" data-act="delgoal" data-i="${i}" aria-label="Usuń osiągnięcie" title="Usuń">${svg('trash', 13)}</button></div>
-      <div class="mring"><svg viewBox="0 0 120 120" aria-hidden="true"><defs><linearGradient id="mg${i}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--cy)"/><stop offset="1" style="stop-color:var(--bl)"/></linearGradient></defs><circle cx="60" cy="60" r="54" fill="rgba(var(--cyr),.06)" stroke="rgba(var(--lnr),.12)" stroke-width="7"/><circle class="arc" cx="60" cy="60" r="54" fill="none" stroke="url(#mg${i})" stroke-width="7" pathLength="100" stroke-dasharray="100 100" transform="rotate(-90 60 60)"/><circle cx="60" cy="60" r="45" fill="none" stroke="rgba(var(--cyr),.35)" stroke-width="1" stroke-dasharray="2 3"/></svg>
+      <div class="mring"><svg viewBox="0 0 120 120" aria-hidden="true"><defs><linearGradient id="mg${i}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff3b0"/><stop offset=".45" stop-color="#fbbf24"/><stop offset="1" stop-color="#b45309"/></linearGradient></defs><circle cx="60" cy="60" r="54" fill="rgba(251,191,36,.07)" stroke="rgba(var(--lnr),.12)" stroke-width="7"/><circle class="arc" cx="60" cy="60" r="54" fill="none" stroke="url(#mg${i})" stroke-width="7" pathLength="100" stroke-dasharray="100 100" transform="rotate(-90 60 60)"/><circle cx="60" cy="60" r="45" fill="none" stroke="rgba(251,191,36,.45)" stroke-width="1" stroke-dasharray="2 3"/></svg>
         <div class="min">${svg(GICON[g.type] || 'star', 18, 2.2)}<b>${esc(g.name || GT[g.type])}</b></div></div>
       <span class="mdate">${g.doneAt ? dLong(g.doneAt) : ''}</span>
     </section>`).join('') : `<section class="card c12 gempty"><b>Brak osiągnięć</b><span>Ukończone cele trafią tu jako medale — automatycznie albo przyciskiem ✓ na karcie celu.</span></section>`}
