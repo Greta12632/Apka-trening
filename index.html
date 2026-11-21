@@ -488,7 +488,7 @@ select.inp option{background:#0b1421;color:var(--ink)}
 .psum{display:flex;flex-wrap:wrap;align-items:center;gap:8px 22px;padding:10px 12px;background:rgba(var(--lnr),.05);border:1px solid var(--line)}
 .psum>span{display:flex;flex-direction:column;gap:1px}
 .psum small{font:700 11px 'Saira Semi Condensed',var(--cond);letter-spacing:.16em;text-transform:uppercase;color:var(--ink3)}
-.psum b{font:italic 800 18px/1.1 var(--cond);text-transform:uppercase}
+.psum b{font:italic 800 14px/1.15 var(--cond);text-transform:uppercase}
 .psum .btn{margin-left:auto}.psum .btn span{padding:7px 14px}
 .psave{display:flex;justify-content:flex-end;gap:8px}.psave .btn span{padding:8px 16px}
 .crow{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
@@ -1068,14 +1068,14 @@ const persistUI = () => { try { sessionStorage.setItem('apex-ui', JSON.stringify
 const VIEWS = [
   ['gym', 'Siłownia', '01', 'Dodaj trening'],
   ['run', 'Bieganie', '02', 'Dodaj bieg'],
-  ['food', 'Kalorie i waga', '03', 'Wpisz dzień'],
+  ['food', 'Odżywianie', '03', 'Wpisz dzień'],
   ['plan', 'Plany', '04', 'Nowy plan'],
   ['set', 'Ustawienia', '05', ''],
   ['goals', 'Cele', '06', 'Nowy cel']
 ];
 const TITLES = { plan: 'Plany treningowe', set: 'Ustawienia', goals: 'Cele treningowe' };
 const NAVI = { gym: 'gym', run: 'run', food: 'food', plan: 'plan', set: 'gear' };
-const NAVL = { gym: 'Siłownia', run: 'Bieganie', food: 'Kalorie', plan: 'Plany', set: 'Ustawienia' };
+const NAVL = { gym: 'Siłownia', run: 'Bieganie', food: 'Odżywianie', plan: 'Plany', set: 'Ustawienia' };
 
 /* ---------- ui bits ---------- */
 const N = (v, d = 0) => `<span data-n="${v}" data-d="${d}">${fmt(v, d)}</span>`;
@@ -1127,6 +1127,7 @@ function predict(R, dist) {
 }
 const weights = () => D.food.filter(f => isNum(f.wt)).slice().sort(byK);
 const curWeight = () => { const L = weights(); return L.length ? num(L[L.length - 1].wt) : 0; };
+const weightAt = k => { const L = weights().filter(x => x.k <= k); return L.length ? num(L[L.length - 1].wt) : 0; };
 
 /* ---------- charts ---------- */
 let gid = 0;
@@ -1260,7 +1261,7 @@ function vRun() {
 }
 
 function vFood() {
-  const F = D.food.slice().sort(byK), now = new Date(), tk = todayK(), G = goalsEff();
+  const F = D.food.slice().sort(byK), now = new Date(), tk = todayK(), G = goalsEff(tk);
   const td = F.find(f => f.k === tk && num(f.kc));
   const kc = td ? num(td.kc) : 0, gk = num(G.kcal) || 1, kp = kc / gk * 100;
   const B = td ? num(td.b) : 0, Wg = td ? num(td.w) : 0, T = td ? num(td.t) : 0, Wa = td ? num(td.wa) : 0;
@@ -1269,7 +1270,7 @@ function vFood() {
   const logged = days.filter(d => d.f);
   const avgK = logged.length ? sumBy(logged, d => d.v) / logged.length : 0;
   const avgB = logged.length ? sumBy(logged, d => num(d.f.b)) / logged.length : 0;
-  const inGoal = logged.filter(d => Math.abs(d.v - gk) <= gk * 0.1).length;
+  const inGoal = logged.filter(d => { const g = goalsEff(d.f.k).kcal; return Math.abs(d.v - g) <= g * 0.1; }).length;
   const C = { b: 'var(--cy)', w: 'var(--bl)', t: 'var(--ice)' };
   const lastF = F.filter(f => f.k < tk && num(f.kc)).pop();
   // weight
@@ -1321,7 +1322,7 @@ function vFood() {
     ${mtile('Zmiana wagi / tydz.', a7p ? kd(wk) + ' kg' : '—')}
     <section class="card c12">
       ${head('Dziennik', 'Ostatnie dni')}
-      <div class="list">${F.length ? F.slice().reverse().slice(0, 8).map(f => `<div class="row tap" data-act="editent" data-ty="food" data-id="f${esc(f.k)}">${dateBox(f.k)}<div><div class="rn">${DOW[dOf(f.k).getDay()]}${isNum(f.wt) ? ` <span class="wtag">${esc(f.wt)} kg</span>` : ''}</div><div class="rm">${num(f.kc) ? `B ${esc(f.b)} · W ${esc(f.w)} · T ${esc(f.t)} g · woda ${esc(f.wa)} l` : 'tylko waga'}</div></div><span>${num(f.kc) && Math.abs(num(f.kc) - gk) <= gk * 0.1 ? '<span class="chip"><span>w celu</span></span>' : ''}</span><span class="rv">${num(f.kc) ? fmt(num(f.kc)) + '<small>kcal</small>' : '—'}</span></div>`).join('') : '<div class="empty">Brak wpisów</div>'}</div>
+      <div class="list">${F.length ? F.slice().reverse().slice(0, 8).map(f => `<div class="row tap" data-act="editent" data-ty="food" data-id="f${esc(f.k)}">${dateBox(f.k)}<div><div class="rn">${DOW[dOf(f.k).getDay()]}${isNum(f.wt) ? ` <span class="wtag">${esc(f.wt)} kg</span>` : ''}</div><div class="rm">${num(f.kc) ? `B ${esc(f.b)} · W ${esc(f.w)} · T ${esc(f.t)} g · woda ${esc(f.wa)} l` : 'tylko waga'}</div></div><span>${num(f.kc) && Math.abs(num(f.kc) - goalsEff(f.k).kcal) <= goalsEff(f.k).kcal * 0.1 ? '<span class="chip"><span>w celu</span></span>' : ''}</span><span class="rv">${num(f.kc) ? fmt(num(f.kc)) + '<small>kcal</small>' : '—'}</span></div>`).join('') : '<div class="empty">Brak wpisów</div>'}</div>
     </section>
   </div>`;
 }
@@ -1432,8 +1433,8 @@ function calcRes(c, wOv) {
 }
 function macroOf(c) { const p = num(c.mp), cb = num(c.mc), f = num(c.mf); return p + cb + f ? { p, c: cb, f } : { p: 30, c: 40, f: 30 }; }
 /* effective daily goals used everywhere in the app */
-function goalsEff() {
-  const c = calcPrefs(), R = autoOn(c) ? calcRes(c) : null, m = macroOf(c);
+function goalsEff(k) {
+  const c = calcPrefs(), R = autoOn(c) ? calcRes(c, k ? weightAt(k) : 0) : null, m = macroOf(c);
   const kcal = R ? R.target : (num(D.goals.kcal) || 2600);
   return { kcal, prot: Math.round(kcal * m.p / 400), carb: Math.round(kcal * m.c / 400), fat: Math.round(kcal * m.f / 900), water: num(D.goals.water) || 0, auto: !!R, R, m };
 }
@@ -1452,7 +1453,7 @@ function calcCard() {
             <span><small>Wiek</small><b>${ageOf(c.birth) ? ageOf(c.birth) + ' ' + plural(ageOf(c.birth), 'rok', 'lata', 'lat') : '—'}</b></span>
             <span><small>Wzrost</small><b>${esc(c.h)} cm</b></span>
             <span><small>Aktywność</small><b>${(ACTS.find(x => x[0] === c.act) || ACTS[2])[1]}</b></span>
-            <span><small>Waga</small><b>${curWeight() ? fmt(curWeight(), 1) : esc(c.wManual || '—')} kg</b></span>
+            <span><small>Waga${weights().length ? ' · ' + dShort(weights().slice(-1)[0].k).d + ' ' + dShort(weights().slice(-1)[0].k).m : ''}</small><b>${curWeight() ? fmt(curWeight(), 1) : esc(c.wManual || '—')} kg</b></span>
             <button class="btn" data-act="profedit"><span>${svg('pen', 13, 2.2)}<em>Edytuj</em></span></button>
           </div>
         </div>` : ''}
@@ -1779,18 +1780,18 @@ function mFood() {
   const cw = curWeight(), ex = D.food.find(x => x.k === (m.date || todayK()));
   const body = `<label class="fld">Data<input class="inp" type="date" data-m="date" value="${m.date}"></label>
     <div class="fsec">
-      <div class="fsh"><b>Waga</b><small>rano</small></div>
+      <div class="fsh"><b>Waga</b></div>
       <div class="wrow"><span class="cin1"><input class="inp c" data-m="wt" value="${esc(m.wt || '')}" placeholder="${cw ? fmt(cw, 1) : '80'}" inputmode="decimal" maxlength="5" aria-label="Waga"><i>kg</i></span><button class="btn pri" data-act="savewt"><span>${svg('check', 14, 3)}<em>Zapisz wagę</em></span></button></div>
       <small class="wgoal" data-wgoal>${wtGoalTxt(m.wt || '')}</small>
     </div>
     <div class="fsec">
-      <div class="fsh"><b>Kalorie i makro</b><small>wieczorem${ex && num(ex.kc) ? ' · zapisane' : ''}</small></div>
+      <div class="fsh"><b>Kalorie i makro</b></div>
       <div class="g2">
         <label class="fld full">Kalorie (kcal)<input class="inp c" data-m="kc" value="${esc(m.kc || '')}" placeholder="${fmt(goalsEff().kcal)}" inputmode="decimal"></label>
         ${f('b', 'Białko (g)', String(goalsEff().prot))}${f('w', 'Węglowodany (g)', String(goalsEff().carb))}${f('t', 'Tłuszcze (g)', String(goalsEff().fat))}${f('wa', 'Woda (l)', '2,5')}
       </div>
     </div>`;
-  return dlg('Kalorie i waga', m.origK ? 'Edytuj dzień' : 'Wpisz dzień', body, `${m.origK ? `<button class="btn del" data-act="delent" data-ty="food" data-id="f${esc(m.origK)}"><span><em>Usuń</em></span></button>` : ''}<button class="btn pri" data-act="savef"><span><em>Zapisz kalorie</em></span></button>`);
+  return dlg('Odżywianie', m.origK ? 'Edytuj dzień' : 'Wpisz dzień', body, `${m.origK ? `<button class="btn del" data-act="delent" data-ty="food" data-id="f${esc(m.origK)}"><span><em>Usuń</em></span></button>` : ''}<button class="btn pri" data-act="savef"><span><em>Zapisz kalorie</em></span></button>`);
 }
 const DISTS = [['5', '5 km'], ['10', '10 km'], ['21,1', 'Półmaraton'], ['42,2', 'Maraton']];
 function goalDefaults(m) {
@@ -2026,7 +2027,7 @@ const A = {
     const k = m.date || todayK(), prev = D.food.find(f => f.k === k) || { k };
     const rec = Object.assign({}, prev, { k, wt: String(m.wt).replace('.', ',') }); delete rec.demo;
     D.food = D.food.filter(f => f.k !== k).concat([rec]); save(); closeModal(); go('food');
-    const G = goalsEff(); toast('Waga zapisana · ' + rec.wt + ' kg', 'cel na dziś: ' + fmt(G.kcal) + ' kcal · B ' + G.prot + ' g', 'check'); checkGoals();
+    const G = goalsEff(k); toast('Waga zapisana · ' + rec.wt + ' kg', 'cel na dziś: ' + fmt(G.kcal) + ' kcal · B ' + G.prot + ' g', 'check'); checkGoals();
   },
   savef: () => {
     const m = S.m; if (!num(m.kc)) { const i = document.querySelector('[data-m="kc"]'); if (i) i.focus(); return; }
