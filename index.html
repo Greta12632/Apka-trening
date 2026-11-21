@@ -1470,7 +1470,7 @@ function calcCard() {
           <div class="cbh"><b>Profil</b><small>${c.saved ? 'edycja' : 'uzupełnij i zapisz'}</small></div>
           <div class="cprof">
             <div class="cf"><label>Płeć</label><div class="seg">${cchip('sex', 'm', 'M', c.sex !== 'k')}${cchip('sex', 'k', 'K', c.sex === 'k')}</div></div>
-            <div class="cf"><label>Data urodzenia</label><input class="inp" type="date" data-calc="birth" value="${esc(c.birth)}"><small class="cage" data-age>${ageOf(c.birth) ? ageOf(c.birth) + ' ' + plural(ageOf(c.birth), 'rok', 'lata', 'lat') : ''}</small></div>
+            <div class="cf"><label>Data urodzenia</label><input class="inp" type="date" data-calc="birth" value="${esc(c.birth)}"></div>
             <div class="cf"><label>Wzrost</label>${inp('h', '180', 'cm')}</div>
             <div class="cf"><label>Aktywność</label><select class="inp" data-calc="act">${ACTS.map(x => `<option value="${x[0]}"${c.act === x[0] ? ' selected' : ''}>${x[1]} · ${x[2]}</option>`).join('')}</select></div>
             ${curWeight() ? '' : `<div class="cf"><label>Waga</label>${inp('wManual', '80', 'kg')}</div>`}
@@ -1525,7 +1525,6 @@ function updCalc() {
   const sum = document.querySelector('[data-msum]'); if (sum) { sum.textContent = 'suma ' + fmt(m.p + m.c + m.f) + '%'; sum.classList.toggle('bad', m.p + m.c + m.f !== 100); }
   const md = document.querySelector('[data-cmode]'); if (md) md.textContent = modeTxt(num(c.adj));
   const ci = document.querySelector('[data-cinfo]'); if (ci) ci.innerHTML = cinfo(c);
-  const ag = document.querySelector('[data-age]'); if (ag) { const a = ageOf(c.birth); ag.textContent = a ? a + ' ' + plural(a, 'rok', 'lata', 'lat') : ''; }
   document.querySelectorAll('[data-act="calcset"][data-k="adj"]').forEach(b => b.classList.toggle('on', num(b.dataset.v) === num(c.adj)));
 
 }
