@@ -1,6 +1,6 @@
 {
-  "name": "APEX · Trening",
-  "short_name": "APEX",
+  "name": "Ascent Training Lab",
+  "short_name": "Ascent",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
