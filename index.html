@@ -371,7 +371,35 @@ select.inp option{background:#0b1421;color:var(--ink)}
 .gempty span{color:var(--ink2)}
 .gtypes{display:flex;flex-wrap:wrap;gap:8px}
 .ico.on{color:#03121c;background:var(--grad);border-color:transparent;box-shadow:0 8px 24px -10px var(--cy)}
-.setcard .g4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.setcard .g4{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.fld .gu{text-align:center;font:600 12px var(--cond);letter-spacing:.14em;color:var(--ink3);margin-top:-2px}
+/* calorie calculator */
+.cgrid{display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:22px;align-items:start}
+.cin{display:flex;flex-direction:column;gap:12px}
+.cin .srow{border-top:0;padding-top:0}
+.c3f{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.csec{display:flex;flex-direction:column;gap:8px}
+.csec>b{font:700 12px var(--cond);letter-spacing:.2em;text-transform:uppercase;color:var(--ink2)}
+.cacts{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.cact{border:1px solid var(--line2);background:var(--p1);padding:8px 6px;display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center;transition:all .2s}
+.cact b{font:italic 800 15px/1.1 var(--cond);text-transform:uppercase}
+.cact small{font-size:11px;color:var(--ink3);line-height:1.2}
+.cact:hover{border-color:var(--cy)}
+.cact.on{background:rgba(var(--cyr),.14);border-color:var(--cy)}
+.cact.on b{color:var(--cy)}
+.cown{max-width:240px}
+.cout{border:1px solid rgba(var(--cyr),.3);background:linear-gradient(160deg,rgba(var(--cyr),.10),transparent 70%);padding:16px;display:flex;flex-direction:column;gap:12px}
+.cres{display:flex;flex-direction:column;gap:4px}
+.cres .big b{font-size:64px}
+.cmode{font:700 14px var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--ink2)}
+.cmode.dn{color:var(--dn)}.cmode.up{color:var(--teal)}
+.ckv{grid-template-columns:repeat(3,minmax(0,1fr))}
+.ckv b{font-size:18px}
+.capply{align-self:stretch}.capply span{justify-content:center;padding:11px 14px}
+.cnow{font:600 12px var(--cond);letter-spacing:.1em;color:var(--ink3);text-transform:uppercase;text-align:center}
+.cempty{display:flex;flex-direction:column;gap:4px;padding:20px 0;text-align:center}
+.cempty b{font:italic 800 22px var(--cond);text-transform:uppercase}
+.cempty span{color:var(--ink2);font-size:13px}
 
 /* liveliness: ripple, spotlight, toast, burst */
 .btn>span,.cta>span,.tab>span,.pc>span{position:relative;overflow:hidden}
@@ -429,7 +457,13 @@ body{-webkit-tap-highlight-color:transparent}
   .score b{font-size:22px}
   .hd{flex-wrap:wrap}
   .big b{font-size:64px}
-  .setcard .g4{grid-template-columns:1fr 1fr}
+  .setcard .g4{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+  .cgrid{grid-template-columns:1fr;gap:14px}
+  .cacts{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .cacts.adj{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .cres .big b{font-size:52px}
+  .ckv span{font-size:10px;letter-spacing:.1em}
+  .cown{max-width:none}
   .gring{width:130px;height:130px}
   .gcard{grid-column:span 12}
   .row:hover,.pr:hover{transform:none}
@@ -999,7 +1033,7 @@ function vGym() {
       <div class="score"><div><span>Najlepszy</span><b class="up">${best ? sgn(best.v) : '—'}</b></div><div><span>Tonaż · T${isoWeek(now)}</span><b class="${dTon >= 0 ? 'up' : 'dn'}">${prevSame.ton ? sgn(dTon) : '—'}</b></div><div><span>PWS · T${isoWeek(now)}</span><b>${N(cur.pws)}</b></div></div>
     </section>
     <section class="card c7">
-      ${head('Progres siły', 'Szac. 1RM · % od pierwszego wpisu', `<span class="chip"><span>średnia ćwiczeń</span></span>`)}
+      ${head('Progres siły', 'Zmiana szac. 1RM')}
       ${lineChart(sPts, { zero: true })}
     </section>
     ${tile('PWS · tydzień', N(cur.pws), prevSame.pws ? `<span class="${dPws >= 0 ? 'up' : 'dn'}">${sgn(dPws)}</span> vs ten sam okres` : 'powtórzenia wysoko stymulujące', 'hot')}
@@ -1049,9 +1083,9 @@ function vRun() {
   const gp = mKm / goal * 100;
   return `<div class="grid">
     <section class="card hero c5">
-      ${head('Kilometry · ' + MONN[now.getMonth()].toLowerCase(), '', `<span class="chip"><span>cel ${fmt(goal)} km</span></span>`)}
+      ${head('Kilometry · ' + MONN[now.getMonth()].toLowerCase())}
       <div class="big"><b>${N(mKm, 1)}</b><small>km</small></div>
-      <div><div class="pl"><span>Cel miesiąca</span><span>${fmt(gp)}%</span></div><div class="pbar"><i style="width:${Math.min(100, gp)}%"></i></div></div>
+      <div><div class="pl"><span>vs cały ${MONN[pStart.getMonth()].toLowerCase()}</span><span>${pFull ? fmt(mKm / pFull * 100) + '%' : '—'}</span></div><div class="pbar"><i style="width:${pFull ? Math.min(100, mKm / pFull * 100) : 0}%"></i></div></div>
       <div class="score"><div><span>vs ${MON[pStart.getMonth()]} · ten sam okres</span><b class="${dM >= 0 ? 'up' : 'dn'}">${pSame ? sgn(dM) : '—'}</b></div><div><span>Biegi</span><b>${N(mR.length)}</b></div><div><span>Czas</span><b>${mmss(mSec)}</b></div></div>
     </section>
     <section class="card c7">
@@ -1216,13 +1250,51 @@ function vPlan() {
   </div>`;
 }
 
+/* ---------- calorie needs calculator (Mifflin–St Jeor) ---------- */
+const ACTS = [['1.2', 'Siedzący', 'praca biurowa, brak treningów'], ['1.375', 'Lekki', '1–3 treningi / tydz.'], ['1.55', 'Średni', '3–5 treningów / tydz.'], ['1.725', 'Wysoki', '6–7 treningów / tydz.'], ['1.9', 'Bardzo wysoki', 'praca fizyczna + treningi']];
+const ADJ = [[-500, 'Redukcja', '−0,5 kg / tydz.'], [-300, 'Lekka redukcja', '−0,3 kg / tydz.'], [0, 'Utrzymanie', 'bez zmian'], [250, 'Lekka masa', '+0,25 kg / tydz.'], [500, 'Masa', '+0,5 kg / tydz.']];
+function calcPrefs() { const c = D.prefs.calc = Object.assign({ sex: 'm', age: '', h: '', w: '', act: '1.55', adj: '0' }, D.prefs.calc || {}); if (!c.w && curWeight()) c.w = fmt(curWeight(), 1); return c; }
+function calcRes(c) {
+  const w = num(c.w), h = num(c.h), a = num(c.age);
+  if (!w || !h || !a) return null;
+  const bmr = 10 * w + 6.25 * h - 5 * a + (c.sex === 'k' ? -161 : 5), tdee = bmr * num(c.act), target = Math.round((tdee + num(c.adj)) / 10) * 10;
+  return { bmr: Math.round(bmr), tdee: Math.round(tdee / 10) * 10, target, prot: Math.round(w * (num(c.adj) < 0 ? 2.2 : 2)), kgWeek: num(c.adj) * 7 / 7700 };
+}
+function calcCard() {
+  const c = calcPrefs(), R = calcRes(c), adjN = num(c.adj);
+  const cchip = (k, v, l) => `<button class="pc${String(c[k]) === String(v) ? ' on' : ''}" data-act="calcset" data-k="${k}" data-v="${v}"><span><em>${l}</em></span></button>`;
+  const f = (k, l, u, ph) => `<label class="fld">${l}<input class="inp c" data-calc="${k}" value="${esc(c[k])}" placeholder="${ph}" inputmode="decimal" maxlength="5"><small class="ts gu">${u}</small></label>`;
+  return `<section class="card c12 calc">
+    ${head('Kalkulator', 'Zapotrzebowanie kaloryczne', '<span class="chip"><span>wzór Mifflin–St Jeor</span></span>')}
+    <div class="cgrid">
+      <div class="cin">
+        ${srow('Płeć', '', `<div class="pchips">${cchip('sex', 'm', 'Mężczyzna')}${cchip('sex', 'k', 'Kobieta')}</div>`)}
+        <div class="c3f">${f('age', 'Wiek', 'lat', '30')}${f('h', 'Wzrost', 'cm', '180')}${f('w', 'Waga', 'kg', '80')}</div>
+        <div class="csec"><b>Aktywność</b><div class="cacts">${ACTS.map(x => `<button class="cact${c.act === x[0] ? ' on' : ''}" data-act="calcset" data-k="act" data-v="${x[0]}"><b>${x[1]}</b><small>${x[2]}</small></button>`).join('')}</div></div>
+        <div class="csec"><b>Cel</b><div class="cacts adj">${ADJ.map(x => `<button class="cact${adjN === x[0] ? ' on' : ''}" data-act="calcset" data-k="adj" data-v="${x[0]}"><b>${x[0] > 0 ? '+' : x[0] < 0 ? '−' : ''}${Math.abs(x[0]) || '±0'} kcal</b><small>${x[1]}</small></button>`).join('')}</div>
+          <label class="fld cown">Własny deficyt / nadwyżka<input class="inp c" data-calc="adj" value="${esc(c.adj)}" placeholder="np. -400" inputmode="numeric" maxlength="5"><small class="ts gu">kcal dziennie · minus = deficyt</small></label></div>
+      </div>
+      <div class="cout" data-cout>${calcOut(R, adjN)}</div>
+    </div>
+  </section>`;
+}
+function calcOut(R, adjN) {
+  if (!R) return `<div class="cempty"><b>Uzupełnij wiek, wzrost i wagę</b><span>Wynik pojawi się od razu.</span></div>`;
+  return `<div class="cres"><span class="k">Twój cel dzienny</span><div class="big"><b>${fmt(R.target)}</b><small>kcal</small></div>
+    <span class="cmode ${adjN < 0 ? 'dn' : adjN > 0 ? 'up' : ''}">${adjN < 0 ? 'Deficyt ' + fmt(Math.abs(adjN)) + ' kcal' : adjN > 0 ? 'Nadwyżka ' + fmt(adjN) + ' kcal' : 'Utrzymanie wagi'}${adjN ? ' · ok. ' + (R.kgWeek > 0 ? '+' : '−') + fmt(Math.abs(R.kgWeek), 2) + ' kg / tydz.' : ''}</span></div>
+    <div class="kv ckv"><div><span>Spoczynkowe</span><b>${fmt(R.bmr)}</b></div><div><span>Całkowite</span><b>${fmt(R.tdee)}</b></div><div><span>Białko</span><b>${R.prot} g</b></div></div>
+    <button class="btn pri capply" data-act="calcapply"><span>${svg('check', 15, 3)}<em>Ustaw jako cel: ${fmt(R.target)} kcal · ${R.prot} g białka</em></span></button>
+    <small class="cnow">Obecny cel: ${fmt(num(D.goals.kcal))} kcal · ${fmt(num(D.goals.prot))} g białka</small>`;
+}
+function updCalc() { const c = calcPrefs(), el = document.querySelector('[data-cout]'); if (el) el.innerHTML = calcOut(calcRes(c), num(c.adj)); document.querySelectorAll('.cacts.adj .cact').forEach(b => b.classList.toggle('on', num(b.dataset.v) === num(c.adj))); }
+
 /* ---------- settings ---------- */
 const tg = (k, on) => `<button class="tg${on ? ' on' : ''}" data-act="pref" data-k="${k}" data-v="${on ? 'false' : 'true'}" role="switch" aria-checked="${on}"><i></i></button>`;
 const srow = (l, sub, ctrl) => `<div class="srow"><div><b>${l}</b>${sub ? `<small>${sub}</small>` : ''}</div>${ctrl}</div>`;
 function vSettings() {
   const P = D.prefs, G = D.goals;
   const hasDemo = D.workouts.concat(D.runs, D.food, D.tgoals || []).some(x => x.demo);
-  const gi = (k, l, u) => `<label class="fld">${l}<input class="inp c" data-g="${k}" value="${esc(String(G[k]).replace('.', ','))}" inputmode="decimal"><small class="ts">${u}</small></label>`;
+  const gi = (k, l, u) => `<label class="fld">${l}<input class="inp c" data-g="${k}" value="${esc(String(G[k]).replace('.', ','))}" inputmode="decimal"><small class="ts gu">${u}</small></label>`;
   const chip = (k, v, l) => `<button class="pc${String(P[k]) === String(v) ? ' on' : ''}" data-act="pref" data-k="${k}" data-v="${v}"><span><em>${l}</em></span></button>`;
   return `<div class="grid">
     <section class="card c6">
@@ -1239,9 +1311,10 @@ function vSettings() {
       ${srow('Ekran nie gaśnie', 'w trakcie dzisiejszego treningu', tg('wake', !!P.wake))}
     </section>
     <section class="card c12 setcard">
-      ${head('Cele', 'Dzienne i miesięczne', '<span class="chip"><span>zapis automatyczny</span></span>')}
-      <div class="g4">${gi('kcal', 'Kalorie dziennie', 'kcal')}${gi('prot', 'Białko dziennie', 'g')}${gi('water', 'Woda dziennie', 'l')}${gi('km', 'Bieganie miesięcznie', 'km')}</div>
+      ${head('Cele', 'Dzienne', '<span class="chip"><span>zapis automatyczny</span></span>')}
+      <div class="g4">${gi('kcal', 'Kalorie', 'kcal')}${gi('prot', 'Białko', 'g')}${gi('water', 'Woda', 'l')}</div>
     </section>
+    ${calcCard()}
     <section class="card c6">
       ${head('Dane', 'Kopia i czyszczenie')}
       <p class="note">Wszystko zapisuje się tylko na tym urządzeniu. Zrób kopię, żeby przenieść dane na inny telefon albo komputer.</p>
@@ -1598,6 +1671,8 @@ const A = {
   oldlog: () => openModal('workout'),
   pref: el => { const k = el.dataset.k, raw = el.dataset.v; D.prefs[k] = raw === 'true' ? true : raw === 'false' ? false : (isNum(raw) ? num(raw) : raw); applyPrefs(); save(); render(); if (k === 'wake') wake(D.prefs.wake); },
   export: () => exportData(),
+  calcset: el => { const c = calcPrefs(); c[el.dataset.k] = el.dataset.v; store(); render(); },
+  calcapply: () => { const c = calcPrefs(), R = calcRes(c); if (!R) return; D.goals.kcal = R.target; D.goals.prot = R.prot; save(); render(); toast('Cel kalorii ustawiony', fmt(R.target) + ' kcal · ' + R.prot + ' g białka', 'check'); },
   lvstart: el => { const i = +el.dataset.i; if (i < 0) { D.active = { name: 'Trening', startedAt: Date.now(), date: todayK(), ex: [{ n: '', plan: null, sets: [{ r: '', kg: '', rir: '', rpe: '', done: false }] }] }; store(); wake(true); render(); } else liveStart(i); },
   lvdone: el => {
     const s = D.active.ex[+el.dataset.e].sets[+el.dataset.i];
@@ -1727,6 +1802,7 @@ function handleField(el) {
   if (el.dataset.lv != null && D.active) { const [ei, si, f] = el.dataset.lv.split('.'); D.active.ex[+ei].sets[+si][f] = el.value; store(); updLive(); return; }
   if (el.dataset.lvn != null && D.active) { D.active.ex[+el.dataset.lvn].n = el.value; store(); return; }
   if (el.dataset.g != null) { if (isNum(el.value)) { D.goals[el.dataset.g] = num(el.value); save(); } return; }
+  if (el.dataset.calc != null) { const c = calcPrefs(); c[el.dataset.calc] = el.value.replace('−', '-'); store(); updCalc(); return; }
   if (el.dataset.m != null) {
     const k = el.dataset.m; S.m[k] = el.value;
     if (S.modal === 'tgoal') {
