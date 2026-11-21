@@ -244,6 +244,8 @@ button{cursor:pointer}
 .inp::placeholder{color:var(--ink3);font-weight:500}
 .inp.c{text-align:center;font:italic 700 18px var(--cond)}
 select.inp option{background:#0b1421;color:var(--ink)}
+select.inp{-webkit-appearance:none;appearance:none;padding-right:44px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238ea3bf' stroke-width='2.6' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 22px center;background-size:14px}
+.wsave span{justify-content:center;min-width:150px}
 .btn{border:1px solid var(--line2);background:transparent;padding:0;transform:skewX(-14deg)}
 .btn span{display:flex;align-items:center;gap:6px;padding:9px 18px;font:italic 700 14px var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--ink)}
 .btn span>*{transform:skewX(14deg)}
@@ -1068,7 +1070,7 @@ const persistUI = () => { try { sessionStorage.setItem('apex-ui', JSON.stringify
 const VIEWS = [
   ['gym', 'Siłownia', '01', 'Dodaj trening'],
   ['run', 'Bieganie', '02', 'Dodaj bieg'],
-  ['food', 'Odżywianie', '03', 'Wpisz dzień'],
+  ['food', 'Odżywianie', '03', 'Dodaj wpis'],
   ['plan', 'Plany', '04', 'Nowy plan'],
   ['set', 'Ustawienia', '05', ''],
   ['goals', 'Cele', '06', 'Nowy cel']
@@ -1296,7 +1298,7 @@ function vFood() {
       ${head('Kalorie · dziś', '', `<span class="chip"><span>cel ${fmt(gk)} kcal</span></span>`)}
       <div class="ringwrap">
         <div class="ring off"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="50" fill="none" stroke="rgba(var(--lnr),.14)" stroke-width="10" stroke-dasharray="3 3" pathLength="100"/></svg><div class="in"><b>—</b><span>CELU</span></div></div>
-        <div class="emptyhero"><b>Dziś bez wpisu</b><button class="btn" data-act="main"><span>${svg('plus', 14, 2.6)}<em>Wpisz dzisiejszy dzień</em></span></button></div>
+        <div class="emptyhero"><b>Dziś bez wpisu</b><button class="btn" data-act="main"><span>${svg('plus', 14, 2.6)}<em>Dodaj wpis</em></span></button></div>
       </div>
       <div class="score"><div><span>Cel białka</span><b>${fmt(num(G.prot))} g</b></div><div><span>Cel wody</span><b>${fmt(num(G.water), 1)} l</b></div><div><span>Do celu</span><b>${fmt(gk)}</b></div></div>
     </section>`;
@@ -1781,7 +1783,7 @@ function mFood() {
   const body = `<label class="fld">Data<input class="inp" type="date" data-m="date" value="${m.date}"></label>
     <div class="fsec">
       <div class="fsh"><b>Waga</b></div>
-      <div class="wrow"><span class="cin1"><input class="inp c" data-m="wt" value="${esc(m.wt || '')}" placeholder="${cw ? fmt(cw, 1) : '80'}" inputmode="decimal" maxlength="5" aria-label="Waga"><i>kg</i></span><button class="btn pri" data-act="savewt"><span>${svg('check', 14, 3)}<em>Zapisz wagę</em></span></button></div>
+      <div class="wrow"><span class="cin1"><input class="inp c" data-m="wt" value="${esc(m.wt || '')}" placeholder="${cw ? fmt(cw, 1) : '80'}" inputmode="decimal" maxlength="5" aria-label="Waga"><i>kg</i></span><button class="btn pri wsave" data-act="savewt"><span><em>Zapisz wagę</em></span></button></div>
       <small class="wgoal" data-wgoal>${wtGoalTxt(m.wt || '')}</small>
     </div>
     <div class="fsec">
@@ -1791,7 +1793,7 @@ function mFood() {
         ${f('b', 'Białko (g)', String(goalsEff().prot))}${f('w', 'Węglowodany (g)', String(goalsEff().carb))}${f('t', 'Tłuszcze (g)', String(goalsEff().fat))}${f('wa', 'Woda (l)', '2,5')}
       </div>
     </div>`;
-  return dlg('Odżywianie', m.origK ? 'Edytuj dzień' : 'Wpisz dzień', body, `${m.origK ? `<button class="btn del" data-act="delent" data-ty="food" data-id="f${esc(m.origK)}"><span><em>Usuń</em></span></button>` : ''}<button class="btn pri" data-act="savef"><span><em>Zapisz kalorie</em></span></button>`);
+  return dlg('Odżywianie', m.origK ? 'Edytuj wpis' : 'Dodaj wpis', body, `${m.origK ? `<button class="btn del" data-act="delent" data-ty="food" data-id="f${esc(m.origK)}"><span><em>Usuń</em></span></button>` : ''}<button class="btn pri" data-act="savef"><span><em>Zapisz kalorie</em></span></button>`);
 }
 const DISTS = [['5', '5 km'], ['10', '10 km'], ['21,1', 'Półmaraton'], ['42,2', 'Maraton']];
 function goalDefaults(m) {
