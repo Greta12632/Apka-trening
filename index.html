@@ -409,6 +409,11 @@ select.inp option{background:#0b1421;color:var(--ink)}
 .gtabs{display:flex;gap:8px}
 .gok{color:var(--cy)!important;border-color:rgba(var(--cyr),.4)!important}
 .gok:hover{background:var(--grad)!important;color:#03121c!important}
+.medalc{align-items:center;justify-content:center;gap:8px;padding:20px 16px 16px;max-width:420px;width:100%;justify-self:center}
+.medalc .mring{width:150px;height:150px}.medalc .min{inset:26px;text-align:center}.medalc .min b{font-size:15px;text-align:center;width:100%}.medalc .mdate{font-size:12px;margin-top:2px}
+@media (max-width:760px){.medalc .mring{width:132px;height:132px}.medalc .min b{font-size:13.5px}}
+.medalc .mact{top:10px;right:10px}
+.medalc:hover .mact,.medalc:focus-within .mact{opacity:1}
 .medals{display:flex;flex-direction:row;flex-wrap:wrap;justify-content:center;align-items:flex-start;gap:22px 26px;padding:22px 16px}
 .medal{position:relative;display:flex;flex-direction:column;align-items:center;gap:3px;text-align:center;width:136px}
 .mring{position:relative;width:126px;height:126px;filter:drop-shadow(0 8px 20px rgba(var(--cyr),.25))}
@@ -1323,13 +1328,12 @@ function vGoals() {
   const tab = S.gtab === 'ach' ? 'ach' : 'act';
   const tabs = `<div class="gtabs c12"><button class="pc${tab === 'act' ? ' on' : ''}" data-act="gtab" data-v="act"><span><em>Aktywne · ${act.length}</em></span></button><button class="pc${tab === 'ach' ? ' on' : ''}" data-act="gtab" data-v="ach"><span><em>Osiągnięcia · ${arch.length}</em></span></button></div>`;
   if (tab === 'ach') return `<div class="grid">${tabs}
-    ${arch.length ? `<section class="card c12 medals">${arch.map(({ g, i }) => `<div class="medal">
-      <div class="mring"><svg viewBox="0 0 120 120" aria-hidden="true"><defs><linearGradient id="mg${i}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--cy)"/><stop offset="1" style="stop-color:var(--bl)"/></linearGradient></defs><circle cx="60" cy="60" r="54" fill="rgba(var(--cyr),.06)" stroke="rgba(var(--lnr),.12)" stroke-width="7"/><circle class="arc" cx="60" cy="60" r="54" fill="none" stroke="url(#mg${i})" stroke-width="7" pathLength="100" stroke-dasharray="100 100" transform="rotate(-90 60 60)"/><circle cx="60" cy="60" r="45" fill="none" stroke="rgba(var(--cyr),.35)" stroke-width="1" stroke-dasharray="2 3"/></svg>
-        <div class="min">${svg(GICON[g.type] || 'star', 18, 2.2)}<b>${esc(g.name || GT[g.type])}</b>${g.res ? `<small>${esc(g.res)}</small>` : ''}</div></div>
-      <span class="mdate">${g.doneAt ? dLong(g.doneAt) : ''}</span>
-      <span class="mtype">${GT[g.type]}${g.manual ? ' · ręcznie' : ''}</span>
+    ${arch.length ? arch.map(({ g, i }) => `<section class="card c12 medalc">
       <div class="mact"><button class="x" data-act="medalback" data-i="${i}" aria-label="Przywróć do aktywnych" title="Przywróć do aktywnych">${svg('up', 13, 2.2)}</button><button class="x" data-act="delgoal" data-i="${i}" aria-label="Usuń osiągnięcie" title="Usuń">${svg('trash', 13)}</button></div>
-    </div>`).join('')}</section>` : `<section class="card c12 gempty"><b>Brak osiągnięć</b><span>Ukończone cele trafią tu jako medale — automatycznie albo przyciskiem ✓ na karcie celu.</span></section>`}
+      <div class="mring"><svg viewBox="0 0 120 120" aria-hidden="true"><defs><linearGradient id="mg${i}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--cy)"/><stop offset="1" style="stop-color:var(--bl)"/></linearGradient></defs><circle cx="60" cy="60" r="54" fill="rgba(var(--cyr),.06)" stroke="rgba(var(--lnr),.12)" stroke-width="7"/><circle class="arc" cx="60" cy="60" r="54" fill="none" stroke="url(#mg${i})" stroke-width="7" pathLength="100" stroke-dasharray="100 100" transform="rotate(-90 60 60)"/><circle cx="60" cy="60" r="45" fill="none" stroke="rgba(var(--cyr),.35)" stroke-width="1" stroke-dasharray="2 3"/></svg>
+        <div class="min">${svg(GICON[g.type] || 'star', 18, 2.2)}<b>${esc(g.name || GT[g.type])}</b></div></div>
+      <span class="mdate">${g.doneAt ? dLong(g.doneAt) : ''}</span>
+    </section>`).join('') : `<section class="card c12 gempty"><b>Brak osiągnięć</b><span>Ukończone cele trafią tu jako medale — automatycznie albo przyciskiem ✓ na karcie celu.</span></section>`}
   </div>`;
   return `<div class="grid">${tabs}
     ${act.length ? act.map(({ g, i }) => { const s = goalState(g); return `<section class="card gcard c4${s.done ? ' gdone' : ''}">
