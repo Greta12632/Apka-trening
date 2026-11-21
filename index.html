@@ -513,7 +513,7 @@ body{-webkit-tap-highlight-color:transparent}
   .exl b{text-align:left}
   .eh{flex-wrap:wrap}
   .score b{font-size:22px}
-  .hd{flex-wrap:wrap}
+  .hd{flex-wrap:nowrap;align-items:flex-start}.hd>div:first-child{min-width:0}
   .big b{font-size:64px}
   .setcard .g4{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
   .cgrid{grid-template-columns:1fr;gap:14px}
@@ -746,7 +746,7 @@ label.btn{cursor:pointer;display:inline-block}
   .fab{display:flex;position:fixed;right:16px;bottom:calc(84px + env(safe-area-inset-bottom));z-index:41;width:58px;height:58px;border:0;padding:0;background:var(--grad);color:#03121c;align-items:center;justify-content:center;clip-path:polygon(0 0,calc(100% - 14px) 0,100% 14px,100% 100%,0 100%);box-shadow:0 14px 30px -10px var(--cy);animation:pop .35s cubic-bezier(.3,1.5,.5,1)}
   .fab:active{scale:.92}
   .restp{bottom:calc(84px + env(safe-area-inset-bottom));max-width:calc(100vw - 24px)}
-  .toast{bottom:auto;top:calc(64px + env(safe-area-inset-top));transform:translate(-50%,-180%);width:calc(100vw - 28px)}
+  .toast{bottom:auto;top:calc(64px + env(safe-area-inset-top));transform:translate(-50%,calc(-100% - 90px - env(safe-area-inset-top)));width:calc(100vw - 28px)}
   .toast.show{transform:translate(-50%,0)}
   /* today's workout on phone */
   .startc .days{grid-template-columns:1fr 1fr;gap:8px}
@@ -1435,7 +1435,6 @@ function vSettings() {
       ${head('Trening', 'Podczas treningu')}
       ${srow('Przerwa między seriami', 'licznik startuje po odhaczeniu serii', `<div class="pchips">${[60, 90, 120, 180, 240].map(s => chip('rest', s, s < 120 ? s + ' s' : (s / 60) + ' min')).join('')}${chip('rest', 0, 'Wył.')}</div>`)}
       ${srow('Dźwięk po przerwie', '', tg('sound', !!P.sound))}
-      ${srow('Wibracje', 'działają na Androidzie', tg('vib', !!P.vib))}
       ${srow('Ekran nie gaśnie', 'w trakcie dzisiejszego treningu', tg('wake', !!P.wake))}
     </section>
     ${calcCard()}
@@ -1577,7 +1576,7 @@ setInterval(() => {
   if (D.active) { const c = document.querySelector('[data-clock]'); if (c) c.textContent = clock(Date.now() - D.active.startedAt); }
   if (S.rest) {
     drawRest();
-    if (!S.restDone && Date.now() >= S.rest.end) { S.restDone = true; beep(); try { if (D.prefs.vib && navigator.vibrate) navigator.vibrate([200, 100, 200]); } catch (e) {} }
+    if (!S.restDone && Date.now() >= S.rest.end) { S.restDone = true; beep(); }
     if (Date.now() - S.rest.end > 60000) { S.rest = null; drawRest(); }
   }
 }, 500);
@@ -1747,7 +1746,6 @@ function toast(title, sub, icon, kind) {
   el.innerHTML = `<span class="ti">${svg(icon || 'check', 18, 2.6)}</span><span><b>${esc(title)}</b>${sub ? `<small>${esc(sub)}</small>` : ''}</span>`;
   requestAnimationFrame(() => el.classList.add('show'));
   clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('show'), 2800);
-  try { if (navigator.vibrate) navigator.vibrate(kind === 'pr' ? [14, 40, 14] : 12); } catch (e) {}
 }
 function burst(colors) {
   if (RM()) return;
@@ -1809,7 +1807,7 @@ const A = {
     const row = el.closest('.lst'); row.classList.toggle('done', s.done); el.setAttribute('aria-pressed', s.done);
     const lex = el.closest('.lex'), e = D.active.ex[+el.dataset.e]; lex.classList.toggle('full', e.sets.every(x => x.done));
     updLive();
-    if (s.done) { restStart(); try { if (D.prefs.vib && navigator.vibrate) navigator.vibrate(15); } catch (x) {} const next = row.nextElementSibling && row.nextElementSibling.querySelector('[data-lv$=".kg"]'); if (next && row.nextElementSibling.classList.contains('lst') && !RM()) next.closest('.lst').classList.add('next'); }
+    if (s.done) { restStart(); const next = row.nextElementSibling && row.nextElementSibling.querySelector('[data-lv$=".kg"]'); if (next && row.nextElementSibling.classList.contains('lst') && !RM()) next.closest('.lst').classList.add('next'); }
   },
   lvmin: () => { D.active.min = !D.active.min; store(); render(); const l = document.getElementById('live'); if (l) { const y = l.getBoundingClientRect().top + scrollY - 80; if (y < scrollY) window.scrollTo({ top: Math.max(0, y), behavior: RM() ? 'auto' : 'smooth' }); } },
   lvaddset: el => { const e = D.active.ex[+el.dataset.e], l = e.sets[e.sets.length - 1]; e.sets.push(l ? Object.assign({}, l, { done: false }) : { r: '', kg: '', rir: '', rpe: '', done: false }); store(); render(); },
