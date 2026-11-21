@@ -219,6 +219,9 @@ button{cursor:pointer}
 .pchips{display:flex;gap:8px;flex-wrap:wrap;flex:1}
 .pc{border:1px solid var(--line2);background:transparent;padding:0;transform:skewX(-14deg)}
 .pc span{display:block;padding:7px 14px;font:700 14px var(--cond);letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)}
+.pbarx .pchips{gap:6px}
+.pbarx .pc span{padding:6px 12px;font-size:13px;letter-spacing:.06em;white-space:nowrap;max-width:200px;overflow:hidden;text-overflow:ellipsis}
+.pbarx .pc em{display:block;overflow:hidden;text-overflow:ellipsis}
 .pc span em{font-style:normal;display:inline-block;transform:skewX(14deg)}
 .pc.on{background:var(--grad);border-color:transparent}
 .pc.on span{color:#03121c}
@@ -531,7 +534,9 @@ body{-webkit-tap-highlight-color:transparent}
   .tb.g>:nth-child(n+3):not(.x),.tb.r>:nth-child(n+3):not(.x){order:2}
   .tb.r{grid-template-columns:repeat(3,minmax(0,1fr)) 34px;gap:6px}
   .tb.r>:nth-child(2){grid-column:span 2}
-  .tb.r.th>span:last-child{display:none}
+  .tb.r.th>span:last-child{order:1}
+  .tb.r .inp{text-align:center}
+  .tb.r select.inp{text-align:center;text-align-last:center}
   .tb .inp{height:38px;font-size:16px;padding:0 6px}
   .tb .inp.c{padding:0 2px}
   .tb.th{font-size:11px;letter-spacing:.1em;padding-bottom:0}
@@ -813,6 +818,10 @@ label.btn{cursor:pointer;display:inline-block}
   .srow{flex-wrap:wrap}
   .srow .pchips{justify-content:flex-start}
   .gkv b{font-size:17px}
+  .pbarx{gap:10px;align-items:center}.pbarx .fld{flex:1 1 100%!important;max-width:none}
+  .pbarx .pc span{font-size:12px;padding:5px 10px;max-width:150px}
+  .pbarx .btn.del span{padding:6px 12px;font-size:12px}
+  .swb{padding:12px 14px}.swb strong{font-size:18px}.swb small{display:none}
   .lmini{gap:10px}
   .lmstats{gap:12px;flex-wrap:wrap}
   .lmact{width:100%}.lmact .btn{flex:1}.lmact .btn span{justify-content:center}
@@ -1103,7 +1112,7 @@ function vGym() {
   const prevSame = agg(W.filter(w => inR(w.k, prev.s, addDays(prev.s, dayIdx + 1))));
   const dTon = pct(cur.ton, prevSame.ton), dPws = pct(cur.pws, prevSame.pws);
   const chg = weeks.slice(1).map((w, j) => { const p = j === 7 ? prevSame : weeks[j]; return { v: p.ton ? pct(w.ton, p.ton) : 0, na: !p.ton || !w.ton, label: w.label, tip: fmt(w.ton) + ' kg · ' + w.sets + ' s.' }; });
-  const avgRir = cur.rirN ? cur.rirSum / cur.rirN : 0;
+  const w4 = { n: sumBy(weeks.slice(5), w => w.n), sets: sumBy(weeks.slice(5), w => w.sets) }, spw = w4.n ? w4.sets / w4.n : 0;
   const pwsPerSet = cur.sets ? cur.pws / cur.sets : 0;
   const pwsWeeks = weeks.slice(1).map(w => ({ v: w.pws, val: fmt(w.pws), label: w.label, tip: fmt(w.pws) + ' PWS · ' + w.sets + ' s.' }));
   const ST = strength(W);
@@ -1121,7 +1130,7 @@ function vGym() {
     <section class="card hero c5">
       ${head('Siła · szac. 1RM', '', `<span class="chip"><span>od ${fk ? fk.d + ' ' + fk.m : '—'}</span></span>`)}
       <div class="big"><b class="${ST.total < 0 ? 'neg' : ''}">${ST.list.length ? (ST.total > 0 ? '+' : ST.total < 0 ? '−' : '') + N(Math.abs(ST.total), 1) : '—'}</b><small>%</small></div>
-      <div><div class="pl"><span>Średnio na ćwiczenie · vs pierwszy wpis</span><span>${ST.list.length} ćw.</span></div><div class="pbar"><i style="width:${Math.min(100, Math.max(0, ST.total) * 2)}%"></i></div></div>
+      <div><div class="pl"><span>Średnio na ćwiczenie</span><span>${ST.list.length} ćw.</span></div><div class="pbar"><i style="width:${Math.min(100, Math.max(0, ST.total) * 2)}%"></i></div></div>
       <div class="score"><div><span>Najlepszy</span><b class="up">${best ? sgn(best.v) : '—'}</b></div><div><span>Tonaż · T${isoWeek(now)}</span><b class="${dTon >= 0 ? 'up' : 'dn'}">${prevSame.ton ? sgn(dTon) : '—'}</b></div><div><span>PWS · T${isoWeek(now)}</span><b>${N(cur.pws)}</b></div></div>
     </section>
     <section class="card c7">
@@ -1130,10 +1139,10 @@ function vGym() {
     </section>
     ${tile('PWS · tydzień', N(cur.pws), prevSame.pws ? `<span class="${dPws >= 0 ? 'up' : 'dn'}">${sgn(dPws)}</span> vs ten sam okres` : 'powtórzenia wysoko stymulujące', 'hot')}
     ${tile('Śr. PWS na serię', N(pwsPerSet, 1) + '<small>/ 5</small>', cur.sets + ' ' + plural(cur.sets, 'seria', 'serie', 'serii') + ' w tym tygodniu')}
-    ${tile('Śr. RIR · tydzień', cur.rirN ? N(avgRir, 1) : '—', cur.rirN ? 'RPE ' + rirToRpe(Math.round(avgRir * 10) / 10) : 'brak wpisanego RIR')}
+    ${tile('Śr. serii na trening', N(spw, 1), w4.n + ' ' + plural(w4.n, 'trening', 'treningi', 'treningów') + ' · 4 tygodnie')}
     ${tile('Tonaż · tydzień', prevSame.ton ? `<span class="${dTon >= 0 ? 'up' : 'dn'}">${sgn(dTon)}</span>` : '—', fmt(cur.ton) + ' kg · vs ten sam okres')}
     <section class="card c5">
-      ${head('Ćwiczenia', 'Szac. 1RM · od pierwszego wpisu')}
+      ${head('Ćwiczenia', 'Szac. 1RM w %')}
       <div class="split">${ST.list.length ? ST.list.slice(0, 7).map(p => `<div class="sp"><div class="pl"><span>${esc(p.n)}</span><b class="${p.v >= 0 ? 'up' : 'dn'}">${sgn(p.v)}</b></div><div class="pbar"><i style="width:${Math.abs(p.v) / maxS * 100}%;${p.v < 0 ? 'background:var(--dn);box-shadow:0 0 12px var(--dn)' : ''}"></i></div><div class="spm">${fmt(p.first)} → <b>${fmt(p.cur)} kg</b></div></div>`).join('') : '<div class="empty">Za mało treningów</div>'}</div>
     </section>
     <section class="card c7">
@@ -1145,7 +1154,7 @@ function vGym() {
       ${bars(pwsWeeks)}
     </section>
     <section class="card c5">
-      ${head('Rekordy', 'Tablica PR', '<span class="chip volt"><span>szac. 1RM</span></span>')}
+      ${head('Rekordy', 'Szacowane rekordy', '<span class="chip volt"><span>szac. 1RM</span></span>')}
       <div>${prs.length ? prs.slice(0, 6).map((p, i) => `<div class="pr"><span class="n">${i + 1}</span><div class="e"><strong>${esc(p.n)}</strong><span>${fmt(p.kg, p.kg % 1 ? 1 : 0)} kg × ${p.r} · ${dShort(p.k).d} ${dShort(p.k).m}</span></div><div class="w"><b>${fmt(p.e1)}</b><span>kg 1RM</span></div></div>`).join('') : '<div class="empty">Brak rekordów</div>'}</div>
     </section>
     <section class="card c12">
@@ -1289,7 +1298,7 @@ function vGoals() {
   const done = L.filter(g => goalState(g).done).length;
   return `<div class="grid">
     ${L.length ? L.map((g, i) => { const s = goalState(g), C = 2 * Math.PI * 52; return `<section class="card gcard c4${s.done ? ' gdone' : ''}">
-      <div class="hd"><span class="k">${GT[g.type]}${g.demo ? '<span class="demo">demo</span>' : ''}</span><div class="gact"><button class="x" data-act="editgoal" data-i="${i}" aria-label="Edytuj cel">${svg('pen', 14)}</button><button class="x" data-act="delgoal" data-i="${i}" aria-label="Usuń cel">${svg('trash', 14)}</button></div></div>
+      <div class="hd"><span class="k">${GT[g.type]}</span><div class="gact"><button class="x" data-act="editgoal" data-i="${i}" aria-label="Edytuj cel">${svg('pen', 14)}</button><button class="x" data-act="delgoal" data-i="${i}" aria-label="Usuń cel">${svg('trash', 14)}</button></div></div>
       <div class="gring"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="52" fill="none" stroke="rgba(var(--lnr),.12)" stroke-width="8"/><circle class="arc" cx="60" cy="60" r="52" fill="none" stroke="${s.done ? '#c4ff4d' : 'url(#gg' + i + ')'}" stroke-width="8" stroke-linecap="butt" pathLength="100" stroke-dasharray="${(s.p * 100).toFixed(1)} 100" transform="rotate(-90 60 60)"/><defs><linearGradient id="gg${i}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" style="stop-color:var(--cy)"/><stop offset="1" style="stop-color:var(--bl)"/></linearGradient></defs></svg><div class="in"><b>${N(s.p * 100)}%</b><span>${s.done ? 'OSIĄGNIĘTY' : 'POSTĘPU'}</span></div></div>
       <h2 class="h2 gname">${esc(g.name || GT[g.type])}</h2>
       <div class="gkv"><div><span>Start</span><b>${s.txt(s.start)}</b></div><div><span>Teraz</span><b class="cy">${s.txt(s.cur)}</b></div><div><span>Cel</span><b>${s.txt(s.target)}</b></div></div>
@@ -1566,7 +1575,7 @@ function startCard() {
   return `<section class="card c12 startc" id="live">
     <div class="hd"><div><span class="k">Dzisiejszy trening</span><h2 class="h2">Co dziś trenujesz?</h2></div><span class="chip"><span>${esc(P ? P.name : '')}</span></span></div>
     <div class="days">${P ? P.days.map((d, i) => d.rows.some(r => r.ex.trim()) ? `<button class="dayb${i === sug ? ' sug' : ''}" data-act="lvstart" data-i="${i}">${i === sug ? '<small>proponowany</small>' : ''}<b>${esc(d.name || 'Dzień ' + (i + 1))}</b><span>${d.rows.filter(r => r.ex.trim()).length} ćw. · ${sumBy(d.rows, r => num(r.s))} serii</span>${svg('play', 18, 2.4)}</button>` : '').join('') : ''}
-      <button class="dayb free" data-act="lvstart" data-i="-1"><b>Pusty trening</b><span>bez planu</span>${svg('plus', 18, 2.4)}</button></div>
+      <button class="dayb free" data-act="lvstart" data-i="-1"><b>Freestyle</b><span>bez planu</span>${svg('plus', 18, 2.4)}</button></div>
     ${days.length ? '' : '<p class="note">Dodaj ćwiczenia w zakładce Plany, żeby startować z planu.</p>'}
     <button class="linkb" data-act="oldlog">Wpisz zaległy trening</button>
   </section>`;
