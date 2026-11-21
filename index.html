@@ -15,7 +15,7 @@
 <title>Ascent Training Lab</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;0,800;1,600;1,700;1,800;1,900&family=Barlow:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;0,800;1,600;1,700;1,800;1,900&family=Barlow:wght@400;500;600;700&family=Saira+Semi+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{
   --bg:#05090f;--p1:#0b1421;--p2:#0f1b2c;--p3:#15243a;--field:#0a1320;
@@ -102,7 +102,7 @@ button{cursor:pointer}
 .card:nth-child(2){animation-delay:.05s}.card:nth-child(3){animation-delay:.1s}.card:nth-child(4){animation-delay:.15s}.card:nth-child(5){animation-delay:.2s}.card:nth-child(6){animation-delay:.25s}.card:nth-child(n+7){animation-delay:.3s}
 @keyframes rise{from{opacity:0;transform:translateY(14px)}}
 .hd{display:flex;justify-content:space-between;align-items:center;gap:12px}
-.k{font:700 12px var(--cond);letter-spacing:.24em;text-transform:uppercase;color:var(--ink2)}
+.k{font:600 12.5px 'Saira Semi Condensed',var(--cond);letter-spacing:.2em;text-transform:uppercase;color:var(--ink2)}
 .h2{margin:2px 0 0;font:italic 700 24px/1.05 var(--cond);text-transform:uppercase;letter-spacing:.02em}
 .chip{font:700 12px var(--cond);letter-spacing:.14em;text-transform:uppercase;padding:5px 12px;border:1px solid var(--line2);color:var(--ice);transform:skewX(-14deg);white-space:nowrap}
 .hdr{display:flex;align-items:center;gap:6px;flex-shrink:0}
@@ -139,7 +139,7 @@ button{cursor:pointer}
 
 .mtile{padding:14px 16px;gap:6px;justify-content:center;min-height:0}
 .mtile::before{width:22px}
-.mtile .mk{font:700 11px var(--cond);letter-spacing:.18em;text-transform:uppercase;color:var(--ink3)}
+.mtile .mk{font:600 11.5px 'Saira Semi Condensed',var(--cond);letter-spacing:.16em;text-transform:uppercase;color:var(--ink3)}
 .mtile b{font:italic 800 28px/1 var(--cond);letter-spacing:.01em}
 @media (max-width:760px){.mtile{padding:12px}.mtile b{font-size:23px}.mtile .mk{font-size:10px;letter-spacing:.12em}}
 .stat4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;padding:14px 18px}
@@ -160,7 +160,7 @@ button{cursor:pointer}
 .chart{display:flex;flex-direction:column;gap:8px;flex:1;justify-content:flex-end}
 .plot{position:relative;display:flex;gap:10px;align-items:stretch;height:var(--h,180px)}
 .bt{flex:1;position:relative;display:flex;align-items:flex-end;background:repeating-linear-gradient(0deg,rgba(var(--lnr),.05) 0 1px,transparent 1px 22px)}
-.bt i{display:block;width:100%;min-height:3px;background:linear-gradient(180deg,rgba(125,211,252,.75),rgba(var(--blr),.25));border-top:2px solid rgba(186,230,253,.9);transform-origin:bottom;animation:grow .9s cubic-bezier(.2,.8,.2,1) both}
+.bt i{display:block;width:100%;min-height:3px;background:linear-gradient(180deg,rgba(var(--cyr),.7),rgba(var(--blr),.22));border-top:2px solid rgba(var(--cyr),.95);transform-origin:bottom;animation:grow .9s cubic-bezier(.2,.8,.2,1) both}
 .bt.now i{background:linear-gradient(180deg,var(--cy),var(--bl));box-shadow:0 0 22px rgba(var(--cyr),.5)}
 .bt:hover i{filter:brightness(1.25)}
 .bt::after{content:attr(data-tip);position:absolute;left:50%;bottom:calc(var(--y,0%) + 10px);transform:translateX(-50%);white-space:nowrap;font:700 12px var(--cond);letter-spacing:.08em;padding:4px 8px;background:#03121c;border:1px solid var(--cy);color:var(--ink);opacity:0;pointer-events:none;transition:opacity .15s;z-index:3}
@@ -181,7 +181,7 @@ button{cursor:pointer}
 .dt b{font:italic 800 22px/1 var(--cond)}
 .dt span{font:italic 700 12px var(--cond);letter-spacing:.16em;color:var(--ink2);text-transform:uppercase}
 .rn{font:700 17px var(--cond);letter-spacing:.04em;text-transform:uppercase;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.rm{font:500 13px var(--body);color:var(--ink2)}
+.rm{font:500 13px var(--body);color:var(--ink2);margin-top:5px}
 .rv{font:italic 800 22px var(--cond);text-align:right;white-space:nowrap}
 .rv small{font-size:.6em;color:var(--ink2);margin-left:3px}
 .badge{font:800 12px var(--cond);letter-spacing:.14em;padding:3px 8px;background:var(--volt);color:#0b1400;transform:skewX(-14deg);display:inline-block}
@@ -190,7 +190,7 @@ button{cursor:pointer}
 .pr{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
 .pr:first-of-type{border-top:0}
 .pr .n{font:italic 800 18px var(--cond);color:var(--ink3)}
-.pr:first-of-type .n{color:var(--volt)}
+.pr:first-of-type .n{color:var(--ink3)}
 .pr .e{display:flex;flex-direction:column;min-width:0}
 .pr .e strong{font:700 16px var(--cond);text-transform:uppercase;letter-spacing:.03em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .pr .e span{font-size:12.5px;color:var(--ink2)}
@@ -421,7 +421,8 @@ select.inp option{background:#0b1421;color:var(--ink)}
 .gtabs{display:flex;gap:8px}
 .gok{color:var(--cy)!important;border-color:rgba(var(--cyr),.4)!important}
 .gok:hover{background:var(--grad)!important;color:#03121c!important}
-.medalc{align-items:center;justify-content:center;gap:8px;padding:20px 16px 16px;max-width:420px;width:100%;justify-self:center}
+.medalc{align-items:center;justify-content:center;gap:8px;padding:20px 16px 16px;max-width:420px;width:100%;justify-self:center;background:radial-gradient(260px 160px at 50% 40%,rgba(251,191,36,.14),transparent 70%),linear-gradient(160deg,rgba(251,191,36,.08),var(--p1) 75%);box-shadow:inset 0 0 0 1px rgba(251,191,36,.22)}
+.medalc::before{background:linear-gradient(90deg,#fde68a,#f59e0b)}
 .medalc .mring{width:150px;height:150px}.medalc .min{inset:26px;text-align:center}.medalc .min b{font-size:15px;text-align:center;width:100%}.medalc .mdate{font-size:12px;margin-top:2px}
 @media (max-width:760px){.medalc .mring{width:132px;height:132px}.medalc .min b{font-size:13.5px}}
 .medalc .mact{top:10px;right:10px}
@@ -902,7 +903,7 @@ const MONF = ['stycznia','lutego','marca','kwietnia','maja','czerwca','lipca','s
 const MONN = ['Styczeń','Luty','Marzec','Kwiecień','Maj','Czerwiec','Lipiec','Sierpień','Wrzesień','Październik','Listopad','Grudzień'];
 const DOW = ['Nd','Pn','Wt','Śr','Cz','Pt','So'];
 const RTYPES = ['Spokojny','Interwały','Tempo','Długi','Regeneracja'];
-const RCOL = { 'Spokojny':'#7dd3fc', 'Interwały':'#22d3ee', 'Tempo':'#3b82f6', 'Długi':'#2dd4bf', 'Regeneracja':'#a78bfa' };
+const RCOL = { 'Spokojny': 'var(--ice)', 'Interwały': 'var(--cy)', 'Tempo': 'var(--bl)', 'Długi': 'rgba(var(--cyr),.6)', 'Regeneracja': 'rgba(var(--blr),.6)' };
 
 /* ---------- helpers ---------- */
 const pad = n => (n < 10 ? '0' : '') + n;
@@ -1261,7 +1262,7 @@ function vFood() {
   const avgK = logged.length ? sumBy(logged, d => d.v) / logged.length : 0;
   const avgB = logged.length ? sumBy(logged, d => num(d.f.b)) / logged.length : 0;
   const inGoal = logged.filter(d => Math.abs(d.v - gk) <= gk * 0.1).length;
-  const C = { b: '#22d3ee', w: '#3b82f6', t: '#a78bfa' };
+  const C = { b: 'var(--cy)', w: 'var(--bl)', t: 'var(--ice)' };
   const lastF = F.filter(f => f.k < tk && num(f.kc)).pop();
   // weight
   const WL = weights(), wNow = WL.length ? num(WL[WL.length - 1].wt) : 0;
@@ -1286,7 +1287,7 @@ function vFood() {
       ${head('Kalorie · dziś', '', `<span class="chip"><span>cel ${fmt(gk)} kcal</span></span>`)}
       <div class="ringwrap">
         <div class="ring off"><svg viewBox="0 0 120 120"><circle cx="60" cy="60" r="50" fill="none" stroke="rgba(var(--lnr),.14)" stroke-width="10" stroke-dasharray="3 3" pathLength="100"/></svg><div class="in"><b>—</b><span>CELU</span></div></div>
-        <div class="emptyhero"><b>Dziś bez wpisu</b>${lastF ? `<span>Ostatnio · ${fmt(num(lastF.kc))} kcal · ${dShort(lastF.k).d} ${dShort(lastF.k).m}</span>` : ''}<button class="btn" data-act="main"><span>${svg('plus', 14, 2.6)}<em>Wpisz dzisiejszy dzień</em></span></button></div>
+        <div class="emptyhero"><b>Dziś bez wpisu</b><button class="btn" data-act="main"><span>${svg('plus', 14, 2.6)}<em>Wpisz dzisiejszy dzień</em></span></button></div>
       </div>
       <div class="score"><div><span>Cel białka</span><b>${fmt(num(G.prot))} g</b></div><div><span>Cel wody</span><b>${fmt(num(G.water), 1)} l</b></div><div><span>Do celu</span><b>${fmt(gk)}</b></div></div>
     </section>`;
@@ -1300,16 +1301,16 @@ function vFood() {
       ${head('Waga', '', wGoal ? `<span class="chip volt"><span>cel ${esc(wGoal.target)} kg</span></span>` : '')}
       <div class="big"><b>${wNow ? N(wNow, 1) : '—'}</b><small>kg</small></div>
       <div><div class="pl"><span>Średnia 7 dni · ${a7 ? fmt(a7, 1) + ' kg' : '—'}</span><span class="${wk <= 0 ? 'up' : 'dn'}">${a7p ? kd(wk) + ' kg / tydz.' : ''}</span></div><div class="pbar"><i style="width:${wGoal && WL.length ? Math.max(0, Math.min(100, (num(WL[0].wt) - wNow) / ((num(WL[0].wt) - num(wGoal.target)) || 1) * 100)) : 0}%"></i></div></div>
-      <div class="score"><div><span>7 dni</span><b>${WL.length ? kd(w7) : '—'}</b></div><div><span>30 dni</span><b>${WL.length ? kd(w30) : '—'}</b></div><div><span>Od startu</span><b>${WL.length ? kd(wAll) : '—'}</b></div></div>
+      <div class="score"><div><span>7 dni</span><b>${WL.length ? kd(w7) + ' kg' : '—'}</b></div><div><span>30 dni</span><b>${WL.length ? kd(w30) + ' kg' : '—'}</b></div><div><span>Od startu</span><b>${WL.length ? kd(wAll) + ' kg' : '—'}</b></div></div>
     </section>
     <section class="card c7">
       ${head('Trend', 'Waga', `<span class="chip"><span>${WL.length} ${plural(WL.length, 'pomiar', 'pomiary', 'pomiarów')}</span></span>`)}
-      ${lineChart(W60, wGoal ? { goal: num(wGoal.target), goalTxt: 'cel ' + esc(wGoal.target) + ' kg' } : {})}
+      ${lineChart(W60, wGoal ? { goal: num(wGoal.target), goalTxt: 'cel ' + esc(wGoal.target) + ' kg', labels: 5 } : { labels: 5 })}
     </section>
-    ${tile('Śr. kalorie · 7 dni', N(avgK) + '<small>kcal</small>', logged.length + ' / 7 dni z wpisem')}
-    ${tile('Śr. białko · 7 dni', N(avgB) + '<small>g</small>', 'cel ' + fmt(num(G.prot)) + ' g')}
-    ${tile('Dni w celu', N(inGoal) + '<small>/ 7</small>', '±10% od celu', 'hot')}
-    ${tile('Tempo zmiany wagi', a7p ? kd(wk) + '<small>kg/tydz.</small>' : '—', a7 && a7p ? (wNow ? sgn(wk / a7p * 100, 1) + ' masy ciała' : '') : 'potrzeba 2 tygodni pomiarów')}
+    ${mtile('Śr. kalorie · 7 dni', avgK ? N(avgK) + ' kcal' : '—')}
+    ${mtile('Śr. białko · 7 dni', avgB ? N(avgB) + ' g' : '—')}
+    ${mtile('Dni w celu', N(inGoal) + ' / 7')}
+    ${mtile('Zmiana wagi / tydz.', a7p ? kd(wk) + ' kg' : '—')}
     <section class="card c12">
       ${head('Dziennik', 'Ostatnie dni')}
       <div class="list">${F.length ? F.slice().reverse().slice(0, 8).map(f => `<div class="row tap" data-act="editent" data-ty="food" data-id="f${esc(f.k)}">${dateBox(f.k)}<div><div class="rn">${DOW[dOf(f.k).getDay()]}${isNum(f.wt) ? ` <span class="wtag">${esc(f.wt)} kg</span>` : ''}</div><div class="rm">${num(f.kc) ? `B ${esc(f.b)} · W ${esc(f.w)} · T ${esc(f.t)} g · woda ${esc(f.wa)} l` : 'tylko waga'}</div></div><span>${num(f.kc) && Math.abs(num(f.kc) - gk) <= gk * 0.1 ? '<span class="chip"><span>w celu</span></span>' : ''}</span><span class="rv">${num(f.kc) ? fmt(num(f.kc)) + '<small>kcal</small>' : '—'}</span></div>`).join('') : '<div class="empty">Brak wpisów</div>'}</div>
@@ -1379,7 +1380,7 @@ function vPlan() {
     </div>
     <div class="pbarx">
       <label class="fld" style="flex:0 1 340px">Nazwa planu<input class="inp" data-pp="name" value="${esc(P.name)}" placeholder="np. Mój plan"></label>
-      <div class="pchips">${D.plans[t].map((p, i) => `<button class="pc${i === D.act[t] ? ' on' : ''}" data-act="pick" data-i="${i}"><span><em>${esc(p.name || 'Bez nazwy')}</em></span></button>`).join('')}<button class="pc add" data-act="newplan"><span><em>+ Nowy</em></span></button></div>
+      <div class="pchips">${D.plans[t].map((p, i) => `<button class="pc${i === D.act[t] ? ' on' : ''}" data-act="pick" data-i="${i}"><span><em>${esc(p.name || 'Bez nazwy')}</em></span></button>`).join('')}</div>
       <button class="btn del" data-act="delplan"><span>${svg('trash', 15)}<em>Usuń plan</em></span></button>
     </div>
   </section>`;
@@ -1490,11 +1491,11 @@ function calcOut() {
   return `<span class="k">Cel dzienny</span>
     <div class="big"><b>${fmt(G.kcal)}</b><small>kcal</small></div>
     ${R ? `<span class="cmode ${adjN < 0 ? 'dn' : adjN > 0 ? 'up' : ''}">${modeTxt(adjN)}${adjN ? ' · ' + (R.kgWeek > 0 ? '+' : '−') + fmt(Math.abs(R.kgWeek), 2) + ' kg / tydz.' : ''}</span>` : ''}
-    <div class="stack"><i style="width:${G.prot * 4 / tot * 100}%;background:var(--cy)"></i><i style="width:${G.carb * 4 / tot * 100}%;background:var(--bl)"></i><i style="width:${G.fat * 9 / tot * 100}%;background:var(--vi)"></i></div>
+    <div class="stack"><i style="width:${G.prot * 4 / tot * 100}%;background:var(--cy)"></i><i style="width:${G.carb * 4 / tot * 100}%;background:var(--bl)"></i><i style="width:${G.fat * 9 / tot * 100}%;background:var(--ice)"></i></div>
     <div class="cmg">
       <div><span><i style="background:var(--cy)"></i>Białko</span><b>${G.prot} g</b><small>${G.m.p}%${wkg ? ' · ' + fmt(G.prot / wkg, 1) + ' g/kg' : ''}</small></div>
       <div><span><i style="background:var(--bl)"></i>Węgle</span><b>${G.carb} g</b><small>${G.m.c}%</small></div>
-      <div><span><i style="background:var(--vi)"></i>Tłuszcze</span><b>${G.fat} g</b><small>${G.m.f}%</small></div>
+      <div><span><i style="background:var(--ice)"></i>Tłuszcze</span><b>${G.fat} g</b><small>${G.m.f}%</small></div>
     </div>
     ${R ? `<div class="cmeta"><span>Spoczynkowe <b>${fmt(R.bmr)}</b></span><span>Całkowite <b>${fmt(R.tdee)}</b></span></div>` : ''}`;
 }
