@@ -429,6 +429,12 @@ select.inp option{background:#0b1421;color:var(--ink)}
 .cin1.own{width:118px}
 .cinfo{display:flex;gap:18px;flex-wrap:wrap;font:600 12px var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--ink3)}
 .cinfo b{color:var(--ink);font-size:14px;letter-spacing:.04em}
+.psum{display:flex;flex-wrap:wrap;align-items:center;gap:8px 22px;padding:10px 12px;background:rgba(var(--lnr),.05);border:1px solid var(--line)}
+.psum>span{display:flex;flex-direction:column;gap:1px}
+.psum small{font:700 11px var(--cond);letter-spacing:.16em;text-transform:uppercase;color:var(--ink3)}
+.psum b{font:italic 800 18px/1.1 var(--cond);text-transform:uppercase}
+.psum .btn{margin-left:auto}.psum .btn span{padding:7px 14px}
+.psave{display:flex;justify-content:flex-end;gap:8px}.psave .btn span{padding:8px 16px}
 .crow{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 .crow .pc span{padding:7px 12px;font-size:13px}
 .crow .cin1 .inp{height:34px}
@@ -519,6 +525,8 @@ body{-webkit-tap-highlight-color:transparent}
   .cin1.own{width:100px}
   .crow .pc span{padding:7px 9px;font-size:12px}
   .hd .cauto-sw small{display:none}
+  .psum{gap:8px 16px}.psum .btn{margin-left:0;width:100%}.psum .btn span{justify-content:center}
+  .psave .btn{flex:1}.psave .btn span{justify-content:center}
   .gring{width:130px;height:130px}
   .gcard{grid-column:span 12}
   .row:hover,.pr:hover{transform:none}
@@ -1309,7 +1317,7 @@ function vPlan() {
 /* ---------- nutrition: automatic calorie needs (Mifflin–St Jeor) + macro split ---------- */
 const ACTS = [['1.2', 'Siedzący', 'brak treningów'], ['1.375', 'Lekki', '1–3 tr. / tydz.'], ['1.55', 'Średni', '3–5 tr. / tydz.'], ['1.725', 'Wysoki', '6–7 tr. / tydz.'], ['1.9', 'Bardzo wysoki', 'praca fizyczna + tr.']];
 const ADJ = [[-500, 'Redukcja'], [-300, 'Lekka redukcja'], [0, 'Utrzymanie'], [250, 'Lekka masa'], [500, 'Masa']];
-const MACS = [['30,40,30', 'Zbilansowany'], ['35,35,30', 'Redukcja'], ['25,50,25', 'Masa'], ['35,20,45', 'Mało węgli']];
+
 function calcPrefs() { return D.prefs.calc = Object.assign({ sex: 'm', birth: '', h: '', act: '1.55', adj: '0', mp: '30', mc: '40', mf: '30', auto: 'true', wManual: '' }, D.prefs.calc || {}); }
 const ageOf = b => { if (!b) return 0; const d = dOf(b), n = new Date(); let a = n.getFullYear() - d.getFullYear(); if (n.getMonth() < d.getMonth() || (n.getMonth() === d.getMonth() && n.getDate() < d.getDate())) a--; return a; };
 const autoOn = c => String(c.auto) !== 'false';
@@ -1334,8 +1342,19 @@ function calcCard() {
     ${head('Odżywianie', 'Kalorie i makro', `<span class="cauto-sw"><small>${auto ? 'automatycznie' : 'ręcznie'}</small>${tg2(auto)}</span>`)}
     <div class="cgrid">
       <div class="cin">
-        ${auto ? `<div class="cblk">
-          <div class="cbh"><b>Profil</b><small>ustawiasz raz · waga z pomiarów</small></div>
+        ${auto && c.saved && !S.editProf ? `<div class="cblk">
+          <div class="cbh"><b>Profil</b><small>zapisany · waga z pomiarów</small></div>
+          <div class="psum">
+            <span><small>Płeć</small><b>${c.sex === 'k' ? 'Kobieta' : 'Mężczyzna'}</b></span>
+            <span><small>Wiek</small><b>${ageOf(c.birth) ? ageOf(c.birth) + ' ' + plural(ageOf(c.birth), 'rok', 'lata', 'lat') : '—'}</b></span>
+            <span><small>Wzrost</small><b>${esc(c.h)} cm</b></span>
+            <span><small>Aktywność</small><b>${(ACTS.find(x => x[0] === c.act) || ACTS[2])[1]}</b></span>
+            <span><small>Waga</small><b>${curWeight() ? fmt(curWeight(), 1) : esc(c.wManual || '—')} kg</b></span>
+            <button class="btn" data-act="profedit"><span>${svg('pen', 13, 2.2)}<em>Edytuj</em></span></button>
+          </div>
+        </div>` : ''}
+        ${auto && !(c.saved && !S.editProf) ? `<div class="cblk">
+          <div class="cbh"><b>Profil</b><small>${c.saved ? 'edycja' : 'uzupełnij i zapisz'}</small></div>
           <div class="cprof">
             <div class="cf"><label>Płeć</label><div class="seg">${cchip('sex', 'm', 'M', c.sex !== 'k')}${cchip('sex', 'k', 'K', c.sex === 'k')}</div></div>
             <div class="cf"><label>Data urodzenia</label><input class="inp" type="date" data-calc="birth" value="${esc(c.birth)}"></div>
@@ -1344,7 +1363,9 @@ function calcCard() {
             ${curWeight() ? '' : `<div class="cf"><label>Waga</label>${inp('wManual', '80', 'kg')}</div>`}
           </div>
           <div class="cinfo" data-cinfo>${cinfo(c)}</div>
-        </div>
+          <div class="psave">${c.saved ? `<button class="btn" data-act="profcancel"><span><em>Anuluj</em></span></button>` : ''}<button class="btn pri" data-act="profsave"><span>${svg('check', 14, 3)}<em>Zapisz profil</em></span></button></div>
+        </div>` : ''}
+        ${auto ? `
         <div class="cblk">
           <div class="cbh"><b>Deficyt / nadwyżka</b><small data-cmode>${modeTxt(adjN)}</small></div>
           <div class="crow">${ADJ.map(x => cchip('adj', x[0], (x[0] > 0 ? '+' : x[0] < 0 ? '−' : '±') + Math.abs(x[0]), adjN === x[0])).join('')}${inp('adj', '-400', 'kcal', 'own')}</div>
@@ -1354,7 +1375,6 @@ function calcCard() {
         </div>`}
         <div class="cblk">
           <div class="cbh"><b>Rozkład makro</b><small data-msum class="${m.p + m.c + m.f === 100 ? '' : 'bad'}">suma ${fmt(m.p + m.c + m.f)}%</small></div>
-          <div class="crow">${MACS.map(x => cchip('mac', x[0], x[1], [m.p, m.c, m.f].join(',') === x[0])).join('')}</div>
           <div class="cmac">${[['mp', 'Białko', 'p'], ['mc', 'Węglowodany', 'c'], ['mf', 'Tłuszcze', 'f']].map(x => `<div class="cf"><label>${x[1]}</label>${inp(x[0], '30', '%')}<small data-mg="${x[2]}"></small></div>`).join('')}
             <div class="cf"><label>Woda</label><span class="cin1"><input class="inp c" data-g="water" value="${esc(String(D.goals.water).replace('.', ','))}" inputmode="decimal" maxlength="4"><i>l</i></span><small>dziennie</small></div></div>
         </div>
@@ -1393,7 +1413,7 @@ function updCalc() {
   const md = document.querySelector('[data-cmode]'); if (md) md.textContent = modeTxt(num(c.adj));
   const ci = document.querySelector('[data-cinfo]'); if (ci) ci.innerHTML = cinfo(c);
   document.querySelectorAll('[data-act="calcset"][data-k="adj"]').forEach(b => b.classList.toggle('on', num(b.dataset.v) === num(c.adj)));
-  document.querySelectorAll('[data-act="calcset"][data-k="mac"]').forEach(b => b.classList.toggle('on', b.dataset.v === [m.p, m.c, m.f].join(',')));
+
 }
 
 /* ---------- settings ---------- */
@@ -1776,6 +1796,9 @@ const A = {
   pref: el => { const k = el.dataset.k, raw = el.dataset.v; D.prefs[k] = raw === 'true' ? true : raw === 'false' ? false : (isNum(raw) ? num(raw) : raw); applyPrefs(); save(); render(); if (k === 'wake') wake(D.prefs.wake); },
   export: () => exportData(),
   fold: el => { const c = el.closest('.card'); if (!c) return; const on = !c.classList.contains('folded'); c.classList.toggle('folded', on); el.setAttribute('aria-expanded', String(!on)); D.prefs.folds = D.prefs.folds || {}; if (on) D.prefs.folds[el.dataset.fk] = 1; else delete D.prefs.folds[el.dataset.fk]; store(); },
+  profedit: () => { const c = calcPrefs(); S.profSnap = { sex: c.sex, birth: c.birth, h: c.h, act: c.act, wManual: c.wManual }; S.editProf = true; render(); },
+  profcancel: () => { if (S.profSnap) Object.assign(calcPrefs(), S.profSnap); S.editProf = false; store(); render(); },
+  profsave: () => { const c = calcPrefs(); if (!c.birth) { const i = document.querySelector('[data-calc="birth"]'); if (i) i.focus(); toast('Brak daty urodzenia', 'potrzebna do wyliczenia wieku', 'x'); return; } if (!num(c.h)) { const i = document.querySelector('[data-calc="h"]'); if (i) i.focus(); toast('Brak wzrostu', 'wpisz wzrost w cm', 'x'); return; } c.saved = true; S.editProf = false; save(); render(); toast('Profil zapisany', ageOf(c.birth) + ' ' + plural(ageOf(c.birth), 'rok', 'lata', 'lat') + ' · ' + c.h + ' cm · ' + (ACTS.find(x => x[0] === c.act) || ACTS[2])[1], 'check'); },
   calcset: el => { const c = calcPrefs(), k = el.dataset.k, v = el.dataset.v; if (k === 'mac') { const p = v.split(','); c.mp = p[0]; c.mc = p[1]; c.mf = p[2]; } else c[k] = v; store(); render(); },
 
   lvstart: el => { const i = +el.dataset.i; if (i < 0) { D.active = { name: 'Trening', startedAt: Date.now(), date: todayK(), ex: [{ n: '', plan: null, sets: [{ r: '', kg: '', rir: '', rpe: '', done: false }] }] }; store(); wake(true); render(); } else liveStart(i); },
