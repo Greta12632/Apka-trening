@@ -28,8 +28,8 @@
 }
 *{box-sizing:border-box}
 html{color-scheme:dark}
-body{margin:0;background:var(--bg);color:var(--ink);font:500 15px/1.4 var(--body);min-height:100vh;overflow-x:hidden}
-html{overflow-x:hidden}
+body{margin:0;background:var(--bg);color:var(--ink);font:500 15px/1.4 var(--body);min-height:100vh;overflow-x:clip}
+html{overflow-x:clip}
 body::before{content:"";position:fixed;inset:0;pointer-events:none;z-index:0;
   background:
    radial-gradient(900px 500px at 85% -10%,rgba(var(--blr),.16),transparent 60%),
@@ -407,7 +407,7 @@ select.inp option{background:#0b1421;color:var(--ink)}
 .top{padding-top:max(14px,env(safe-area-inset-top));padding-left:max(32px,env(safe-area-inset-left));padding-right:max(32px,env(safe-area-inset-right))}
 .wrap{padding-bottom:calc(60px + env(safe-area-inset-bottom))}
 html{-webkit-text-size-adjust:100%}
-body{-webkit-tap-highlight-color:transparent;overscroll-behavior-y:none}
+body{-webkit-tap-highlight-color:transparent}
 .dlg{max-height:calc(100dvh - 40px)}
 @media (max-width:760px){
   .inp,.search .inp,.exh .inp{font-size:16px}
@@ -514,6 +514,17 @@ label.btn{cursor:pointer;display:inline-block}
 .lfin span{padding:12px 26px}
 .flash{animation:flash 1s ease}
 @keyframes flash{30%{box-shadow:inset 0 0 0 2px var(--cy),0 0 40px -10px var(--cy)}}
+.lhact{display:flex;align-items:center;gap:8px}
+.lminb span{padding:7px 14px}
+.live.mini{gap:10px;padding-top:14px;padding-bottom:14px}
+.lmini{display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+.lmhead{border:0;background:none;padding:0;text-align:left;display:flex;flex-direction:column;gap:2px;min-width:0;flex:1 1 160px}
+.lmhead b{font:italic 800 24px/1 var(--cond);text-transform:uppercase;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.lmstats{display:flex;gap:16px;font:600 13px var(--cond);letter-spacing:.1em;text-transform:uppercase;color:var(--ink2)}
+.lmstats span{display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
+.lmstats b{font:italic 800 19px var(--cond);color:var(--ink);letter-spacing:.02em}
+.lmact{display:flex;gap:8px}
+.live.mini .lpbar{height:6px}
 /* rest timer pill */
 .restp{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:70;display:flex;align-items:center;gap:8px;padding:8px 8px 8px 12px;background:linear-gradient(120deg,#0f2740,#0a1422);border:1px solid rgba(var(--cyr),.5);box-shadow:0 18px 40px -16px rgba(var(--cyr),.7);clip-path:polygon(0 0,calc(100% - 12px) 0,100% 12px,100% 100%,0 100%);animation:pop .3s cubic-bezier(.2,.9,.3,1.2)}
 .restp .rp{width:40px;height:40px;border-radius:50%;background:conic-gradient(var(--cy) var(--p),rgba(130,185,255,.15) 0);-webkit-mask:radial-gradient(circle,transparent 13px,#000 14px);mask:radial-gradient(circle,transparent 13px,#000 14px)}
@@ -610,6 +621,11 @@ label.btn{cursor:pointer;display:inline-block}
   .srow{flex-wrap:wrap}
   .srow .pchips{justify-content:flex-start}
   .gkv b{font-size:17px}
+  .lmini{gap:10px}
+  .lmstats{gap:12px;flex-wrap:wrap}
+  .lmact{width:100%}.lmact .btn{flex:1}.lmact .btn span{justify-content:center}
+  .lminb span{padding:6px 10px}
+  .lhact{gap:6px}
   .emptyhero b{font-size:28px}
   .emptyhero .btn span{padding:10px 14px}
 }
@@ -820,7 +836,7 @@ function bars(items, o = {}) {
 /* diverging bars for % change: up = cyan, down = red, zero line in the middle */
 function dbars(items, o = {}) {
   const max = Math.max(5, ...items.map(i => Math.abs(i.v))) * 1.25;
-  return `<div class="chart"><div class="plot dplot" style="--h:${o.h || 190}px"><div class="zero"></div>${items.map((it, i) => { const h = Math.abs(it.v) / max * 50, up = it.v >= 0; return `<div class="bt db${up ? '' : ' neg'}${i === items.length - 1 ? ' now' : ''}" data-tip="${esc(it.tip)}" style="--y:${50 + (up ? h : 0)}%"><i style="height:${h}%;${up ? 'bottom:50%' : 'top:50%'};animation-delay:${i * 55}ms"></i><span class="dv" style="${up ? 'bottom:calc(50% + ' + h + '% + 4px)' : 'top:calc(50% + ' + h + '% + 4px)'}">${it.na ? '—' : (it.v > 0 ? '+' : '') + fmt(it.v, Math.abs(it.v) < 10 ? 1 : 0) + '%'}</span></div>`; }).join('')}</div><div class="lbls">${items.map((it, i) => `<span class="${i === items.length - 1 ? 'now' : ''}">${esc(it.label)}</span>`).join('')}</div></div>`;
+  return `<div class="chart"><div class="plot dplot" style="--h:${o.h || 190}px"><div class="zero"></div>${items.map((it, i) => { const h = Math.abs(it.v) / max * 50, up = it.v >= 0; return `<div class="bt db${up ? '' : ' neg'}${i === items.length - 1 ? ' now' : ''}" data-tip="${esc(it.tip)}" style="--y:${50 + (up ? h : 0)}%"><i style="height:${h}%;${up ? 'bottom:50%' : 'top:50%'};animation-delay:${i * 55}ms"></i><span class="dv" style="${up ? 'bottom:calc(50% + ' + h + '% + 4px)' : 'top:calc(50% + ' + h + '% + 4px)'}">${it.na ? '—' : Math.abs(it.v) < 0.05 ? '0%' : (it.v > 0 ? '+' : '') + fmt(it.v, Math.abs(it.v) < 10 ? 1 : 0) + '%'}</span></div>`; }).join('')}</div><div class="lbls">${items.map((it, i) => `<span class="${i === items.length - 1 ? 'now' : ''}">${esc(it.label)}</span>`).join('')}</div></div>`;
 }
 const pct = (a, b) => b ? (a / b - 1) * 100 : 0;
 const sgn = (v, d = 1) => (v > 0 ? '+' : '') + fmt(v, d) + '%';
@@ -1227,8 +1243,17 @@ function liveTotals() {
 const clock = ms => { const s = Math.max(0, Math.floor(ms / 1000)), h = Math.floor(s / 3600), m = Math.floor(s % 3600 / 60); return (h ? h + ':' + pad(m) : m) + ':' + pad(s % 60); };
 function liveCard() {
   const A2 = D.active, T = liveTotals();
+  const bar = `<div class="pbar lpbar"><i data-lt="bar" style="width:${T.all ? T.done / T.all * 100 : 0}%"></i></div>`;
+  if (A2.min) return `<section class="card c12 live mini" id="live">
+    <div class="lmini">
+      <button class="lmhead" data-act="lvmin" aria-label="Rozwiń dzisiejszy trening"><span class="k"><i class="rec"></i>Trening w trakcie</span><b>${esc(A2.name)}</b></button>
+      <div class="lmstats"><span>${svg('timer', 13, 2.4)}<b data-clock>${clock(Date.now() - A2.startedAt)}</b></span><span><b data-lt="done">${T.done}</b>/<span data-lt="all">${T.all}</span> serii</span><span><b data-lt="pws">${fmt(T.pws, 1).replace(',0', '')}</b> PWS</span></div>
+      <div class="lmact"><button class="btn" data-act="lvmin"><span>${svg('down', 14, 2.4)}<em>Rozwiń</em></span></button><button class="btn pri" data-act="lvfinish"><span>${svg('check', 14, 3)}<em>Zakończ</em></span></button></div>
+    </div>
+    ${bar}
+  </section>`;
   return `<section class="card c12 live" id="live">
-    <div class="hd"><div><span class="k"><i class="rec"></i>Dzisiejszy trening · w trakcie</span><h2 class="h2">${esc(A2.name)}</h2></div><span class="chip lclock"><span>${svg('timer', 13, 2.4)} <b data-clock>${clock(Date.now() - A2.startedAt)}</b></span></span></div>
+    <div class="hd"><div><span class="k"><i class="rec"></i>Dzisiejszy trening · w trakcie</span><h2 class="h2">${esc(A2.name)}</h2></div><div class="lhact"><span class="chip lclock"><span>${svg('timer', 13, 2.4)} <b data-clock>${clock(Date.now() - A2.startedAt)}</b></span></span><button class="btn lminb" data-act="lvmin" aria-label="Zwiń dzisiejszy trening"><span>${svg('up', 14, 2.4)}<em>Zwiń</em></span></button></div></div>
     <div><div class="pl"><span>Zrobione serie</span><span><b data-lt="done">${T.done}</b> / <span data-lt="all">${T.all}</span></span></div><div class="pbar lpbar"><i data-lt="bar" style="width:${T.all ? T.done / T.all * 100 : 0}%"></i></div></div>
     ${A2.ex.map((e, ei) => { const st = e.sets.filter(s => s.done); return `<div class="lex${e.sets.length && st.length === e.sets.length ? ' full' : ''}" data-lex="${ei}">
       <div class="exh"><input class="inp" data-lvn="${ei}" value="${esc(e.n)}" placeholder="Nazwa ćwiczenia" aria-label="Ćwiczenie"><span class="pw"><span data-lpw="${ei}">${fmt(sumBy(st, pwsOf), 1).replace(',0', '')}</span><small>PWS</small></span><button class="x" data-act="lvdelex" data-i="${ei}" aria-label="Usuń ćwiczenie">${svg('x', 13, 2.4)}</button></div>
@@ -1513,6 +1538,7 @@ const A = {
     updLive();
     if (s.done) { restStart(); try { if (D.prefs.vib && navigator.vibrate) navigator.vibrate(15); } catch (x) {} const next = row.nextElementSibling && row.nextElementSibling.querySelector('[data-lv$=".kg"]'); if (next && row.nextElementSibling.classList.contains('lst') && !RM()) next.closest('.lst').classList.add('next'); }
   },
+  lvmin: () => { D.active.min = !D.active.min; store(); render(); const l = document.getElementById('live'); if (l) { const y = l.getBoundingClientRect().top + scrollY - 80; if (y < scrollY) window.scrollTo({ top: Math.max(0, y), behavior: RM() ? 'auto' : 'smooth' }); } },
   lvaddset: el => { const e = D.active.ex[+el.dataset.e], l = e.sets[e.sets.length - 1]; e.sets.push(l ? Object.assign({}, l, { done: false }) : { r: '', kg: '', rir: '', rpe: '', done: false }); store(); render(); },
   lvdelset: el => { const e = D.active.ex[+el.dataset.e]; if (e.sets.length > 1) e.sets.pop(); store(); render(); },
   lvaddex: () => { D.active.ex.push({ n: '', plan: null, sets: [{ r: '', kg: '', rir: '', rpe: '', done: false }] }); store(); render(); const L = document.querySelectorAll('[data-lvn]'); if (L.length) L[L.length - 1].focus(); },
