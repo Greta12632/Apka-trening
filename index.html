@@ -1432,7 +1432,17 @@ const ACTS = [['1.2', 'Siedzący', 'brak treningów'], ['1.375', 'Lekki', '1–3
 const ADJ = [[-500, 'Redukcja'], [-300, 'Lekka redukcja'], [0, 'Utrzymanie'], [250, 'Lekka masa'], [500, 'Masa']];
 
 function calcPrefs() { return D.prefs.calc = Object.assign({ sex: 'm', birth: '', h: '', act: '1.55', adj: '0', mp: '30', mc: '40', mf: '30', auto: 'true', wManual: '' }, D.prefs.calc || {}); }
-const ageOf = b => { if (!b) return 0; const d = dOf(b), n = new Date(); let a = n.getFullYear() - d.getFullYear(); if (n.getMonth() < d.getMonth() || (n.getMonth() === d.getMonth() && n.getDate() < d.getDate())) a--; return a; };
+/* age from birth date (YYYY-MM-DD, or DD.MM.YYYY just in case); 0 when missing or implausible */
+const ageOf = b => {
+  if (!b) return 0;
+  const s = String(b).trim(); let y, mo, d, m;
+  if ((m = s.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/))) { y = +m[1]; mo = +m[2] - 1; d = +m[3]; }
+  else if ((m = s.match(/^(\d{1,2})[./](\d{1,2})[./](\d{4})/))) { y = +m[3]; mo = +m[2] - 1; d = +m[1]; }
+  else return 0;
+  const n = new Date(); let a = n.getFullYear() - y;
+  if (n.getMonth() < mo || (n.getMonth() === mo && n.getDate() < d)) a--;
+  return a > 0 && a < 120 ? a : 0;
+};
 const autoOn = c => String(c.auto) !== 'false';
 function calcRes(c, wOv) {
   const w = wOv || curWeight() || num(c.wManual), h = num(c.h), a = ageOf(c.birth) || num(c.age);
@@ -1941,7 +1951,7 @@ const A = {
   fold: el => { const c = el.closest('.card'); if (!c) return; const on = !c.classList.contains('folded'); c.classList.toggle('folded', on); el.setAttribute('aria-expanded', String(!on)); D.prefs.folds = D.prefs.folds || {}; if (on) D.prefs.folds[el.dataset.fk] = 1; else delete D.prefs.folds[el.dataset.fk]; store(); },
   profedit: () => { const c = calcPrefs(); S.profSnap = { sex: c.sex, birth: c.birth, h: c.h, act: c.act, wManual: c.wManual }; S.editProf = true; render(); },
   profcancel: () => { if (S.profSnap) Object.assign(calcPrefs(), S.profSnap); S.editProf = false; store(); render(); },
-  profsave: () => { const c = calcPrefs(); if (!c.birth) { const i = document.querySelector('[data-calc="birth"]'); if (i) i.focus(); toast('Brak daty urodzenia', 'potrzebna do wyliczenia wieku', 'x'); return; } if (!num(c.h)) { const i = document.querySelector('[data-calc="h"]'); if (i) i.focus(); toast('Brak wzrostu', 'wpisz wzrost w cm', 'x'); return; } c.saved = true; S.editProf = false; save(); render(); toast('Profil zapisany', ageOf(c.birth) + ' ' + plural(ageOf(c.birth), 'rok', 'lata', 'lat') + ' · ' + c.h + ' cm · ' + (ACTS.find(x => x[0] === c.act) || ACTS[2])[1], 'check'); },
+  profsave: () => { const c = calcPrefs(); const bi = document.querySelector('[data-calc="birth"]'), hi = document.querySelector('[data-calc="h"]'); if (bi && bi.value) c.birth = bi.value; if (hi && hi.value) c.h = hi.value; if (!ageOf(c.birth)) { const i = document.querySelector('[data-calc="birth"]'); if (i) i.focus(); toast('Sprawdź datę urodzenia', 'wybierz datę i zatwierdź ją w kalendarzu', 'x'); return; } if (!num(c.h)) { const i = document.querySelector('[data-calc="h"]'); if (i) i.focus(); toast('Brak wzrostu', 'wpisz wzrost w cm', 'x'); return; } c.saved = true; S.editProf = false; save(); render(); toast('Profil zapisany', ageOf(c.birth) + ' ' + plural(ageOf(c.birth), 'rok', 'lata', 'lat') + ' · ' + c.h + ' cm · ' + (ACTS.find(x => x[0] === c.act) || ACTS[2])[1], 'check'); },
   calcset: el => { const c = calcPrefs(), k = el.dataset.k, v = el.dataset.v; if (k === 'mac') { const p = v.split(','); c.mp = p[0]; c.mc = p[1]; c.mf = p[2]; } else c[k] = v; store(); render(); },
 
   lvstart: el => { const i = +el.dataset.i; if (i < 0) { D.active = { name: 'Trening', startedAt: Date.now(), date: todayK(), ex: [{ n: '', plan: null, sets: [{ r: '', kg: '', rir: '', rpe: '', done: false }] }] }; store(); wake(true); render(); } else liveStart(i); },
@@ -2107,7 +2117,11 @@ function handleField(el) {
   }
 }
 document.addEventListener('input', onField);
-document.addEventListener('change', ev => { if (ev.target.id === 'importf' && ev.target.files && ev.target.files[0]) { importData(ev.target.files[0]); ev.target.value = ''; } });
+document.addEventListener('change', ev => {
+  if (ev.target.id === 'importf' && ev.target.files && ev.target.files[0]) { importData(ev.target.files[0]); ev.target.value = ''; return; }
+  /* iOS Safari reports the final value of date pickers and selects only via 'change' */
+  if (ev.target.matches && ev.target.matches('input[type=date], select')) onField(ev);
+});
 if (D.active) wake(true);
 checkGoals(true);
 render();
