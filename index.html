@@ -9,8 +9,8 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Ascent">
 <meta name="format-detection" content="telephone=no">
-<link rel="apple-touch-icon" href="icon-180.png">
-<link rel="icon" type="image/png" href="icon-180.png">
+<link rel="apple-touch-icon" href="icon-180.png?v=2">
+<link rel="icon" type="image/png" href="icon-180.png?v=2">
 <link rel="manifest" href="manifest.webmanifest">
 <title>Ascent Training Lab</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -84,7 +84,7 @@ button{cursor:pointer}
 
 /* ---------- page head ---------- */
 .wrap{position:relative;z-index:1;max-width:1440px;margin:0 auto;padding:26px 32px 60px}
-.ph{position:relative;display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin:6px 0 22px;min-height:86px}
+.ph{position:relative;display:flex;align-items:flex-end;justify-content:space-between;gap:20px;margin:6px 0 20px}
 .ghost{position:absolute;right:-6px;top:-34px;font:italic 900 170px/1 var(--cond);color:transparent;-webkit-text-stroke:1px rgba(125,211,252,.09);pointer-events:none;user-select:none;letter-spacing:-.02em}
 .kick{display:flex;align-items:center;gap:10px;font:700 12px var(--cond);letter-spacing:.32em;text-transform:uppercase;color:var(--cy)}
 .kick::before{content:"";width:26px;height:3px;background:var(--grad);transform:skewX(-30deg)}
@@ -276,6 +276,7 @@ select.inp option{background:#0b1421;color:var(--ink)}
 .addrow{border:1.5px dashed var(--line2);background:transparent;color:var(--ink2);height:44px;font:italic 700 15px var(--cond);letter-spacing:.12em;text-transform:uppercase;transition:all .2s}
 .addrow:hover{border-color:var(--cy);color:var(--cy)}
 .scrollx{overflow-x:auto}
+.ptbl{display:flex;flex-direction:column;gap:8px}.ptbl.pg{min-width:780px}.ptbl.pr2{min-width:760px}
 
 /* data */
 .lib{height:600px;display:flex;flex-direction:column}
@@ -517,7 +518,28 @@ body{-webkit-tap-highlight-color:transparent}
   .big b{font-size:64px}
   .setcard .g4{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
   .cgrid{grid-template-columns:1fr;gap:14px}
-  .cprof{grid-template-columns:auto minmax(0,1fr) 88px;gap:8px}
+  /* plans: no sideways scrolling on phone — each exercise is two lines */
+  .scrollx{overflow:visible}
+  .ptbl.pg,.ptbl.pr2{min-width:0;gap:4px}
+  .tb.g{grid-template-columns:repeat(5,minmax(0,1fr)) 34px;gap:6px}
+  .tb.g .nb,.tb.g.th>span:first-child,.tb.g.th>span:nth-child(2),.tb.g.th>span:last-child{display:none}
+  .tb.g.tr>:nth-child(2){grid-column:1 / 6}
+  .tb.g>.x,.tb.r>.x{order:1;width:34px;height:38px}
+  .tb.g>:nth-child(n+3):not(.x),.tb.r>:nth-child(n+3):not(.x){order:2}
+  .tb.r{grid-template-columns:repeat(3,minmax(0,1fr)) 34px;gap:6px}
+  .tb.r>:nth-child(2){grid-column:span 2}
+  .tb.r.th>span:last-child{display:none}
+  .tb .inp{height:38px;font-size:16px;padding:0 6px}
+  .tb .inp.c{padding:0 2px}
+  .tb.th{font-size:11px;letter-spacing:.1em;padding-bottom:0}
+  .tb.tr{padding-top:10px}
+  .card .hd .dayname{font-size:22px;max-width:none;flex:1 1 100%;width:100%}
+  .card .hd:has(.dayname){flex-wrap:wrap}
+  .cprof{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}
+  .cprof .cf:first-child{grid-column:1 / -1}
+  .cprof .cf .inp{width:100%;min-width:0;max-width:100%}
+  .cprof input[type=date]{-webkit-appearance:none;appearance:none;text-align:left;padding:0 10px;display:block}
+  .cprof input[type=date]::-webkit-date-and-time-value{text-align:left}
   .cprof .cf:nth-child(4){grid-column:1 / -1}
   .cmac{grid-template-columns:repeat(2,minmax(0,1fr))}
   .cout .big b{font-size:52px}
@@ -675,7 +697,9 @@ label.btn{cursor:pointer;display:inline-block}
 .restp .rt{display:flex;flex-direction:column;min-width:86px}
 .restp small{font:700 11px var(--cond);letter-spacing:.2em;color:var(--ink2);text-transform:uppercase}
 .restp b{font:italic 800 26px/1 var(--cond);font-variant-numeric:tabular-nums}
-.restp .x{width:42px;height:40px;font:italic 800 14px var(--cond);color:var(--ink2)}
+.rbtn{width:44px;height:40px;border:1px solid var(--line2);background:rgba(var(--lnr),.06);color:var(--ink);font:italic 800 15px var(--cond);display:flex;align-items:center;justify-content:center;transition:background .15s,border-color .15s,transform .1s;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
+.rbtn:hover{border-color:var(--cy);background:rgba(var(--cyr),.12)}
+.rbtn:active{transform:scale(.92);background:rgba(var(--cyr),.22)}
 .restp.over{border-color:var(--volt);box-shadow:0 18px 40px -16px rgba(196,255,77,.7);animation:overp 1s infinite}
 .restp.over b,.restp.over small{color:var(--volt)}
 @keyframes overp{50%{transform:translateX(-50%) scale(1.04)}}
@@ -1006,7 +1030,7 @@ function dbars(items, o = {}) {
 }
 const pct = (a, b) => b ? (a / b - 1) * 100 : 0;
 const sgn = (v, d = 1) => (v > 0 ? '+' : '') + fmt(v, d) + '%';
-const head = (k, h, right = '') => { const fk = S.view + ':' + k + ':' + (h || ''); return `<div class="hd"><div><span class="k">${k}</span>${h ? `<h2 class="h2">${h}</h2>` : ''}</div><div class="hdr">${right}<button class="fold" data-act="fold" data-fk="${esc(fk)}" aria-label="Zwiń kartę" aria-expanded="true" title="Zwiń / rozwiń">${svg('chev', 14, 2.4)}</button></div></div>`; };
+const head = (k, h, right = '') => { const fk = S.view + ':' + (S.hk = (S.hk || 0) + 1); return `<div class="hd"><div><span class="k">${k}</span>${h ? `<h2 class="h2">${h}</h2>` : ''}</div><div class="hdr">${right}<button class="fold" data-act="fold" data-fk="${esc(fk)}" aria-label="Zwiń kartę" aria-expanded="true" title="Zwiń / rozwiń">${svg('chev', 14, 2.4)}</button></div></div>`; };
 function applyFolds() { const F = D.prefs.folds || {}; document.querySelectorAll('#app [data-fk]').forEach(b => { if (F[b.dataset.fk]) { const c = b.closest('.card'); if (c) c.classList.add('folded'); b.setAttribute('aria-expanded', 'false'); } }); }
 const tile = (k, v, s, cls = '') => `<section class="card tile c3 ${cls}"><span class="k">${k}</span><span class="tv">${v}</span><span class="ts">${s || '&nbsp;'}</span></section>`;
 const dateBox = k => { const x = dShort(k); return `<div class="dt"><b>${x.d}</b><span>${x.m}</span></div>`; };
@@ -1119,7 +1143,7 @@ function vGym() {
     </section>
     <section class="card c5">
       ${head('Rekordy', 'Tablica PR', '<span class="chip volt"><span>szac. 1RM</span></span>')}
-      <div>${prs.length ? prs.slice(0, 6).map((p, i) => `<div class="pr"><span class="n">${pad(i + 1)}</span><div class="e"><strong>${esc(p.n)}</strong><span>${fmt(p.kg, p.kg % 1 ? 1 : 0)} kg × ${p.r} · ${dShort(p.k).d} ${dShort(p.k).m}</span></div><div class="w"><b>${fmt(p.e1)}</b><span>kg 1RM</span></div></div>`).join('') : '<div class="empty">Brak rekordów</div>'}</div>
+      <div>${prs.length ? prs.slice(0, 6).map((p, i) => `<div class="pr"><span class="n">${i + 1}</span><div class="e"><strong>${esc(p.n)}</strong><span>${fmt(p.kg, p.kg % 1 ? 1 : 0)} kg × ${p.r} · ${dShort(p.k).d} ${dShort(p.k).m}</span></div><div class="w"><b>${fmt(p.e1)}</b><span>kg 1RM</span></div></div>`).join('') : '<div class="empty">Brak rekordów</div>'}</div>
     </section>
     <section class="card c12">
       ${head('Historia', 'Ostatnie treningi', '<span class="chip"><span>tonaż vs poprzedni taki sam</span></span>')}
@@ -1293,8 +1317,8 @@ function vPlan() {
     return `<div class="grid">${top}
       ${P.days.map((d, di) => `<section class="card c12">
         <div class="hd"><input class="dayname" data-pp="days.${di}.name" value="${esc(d.name)}" placeholder="Nazwa dnia" aria-label="Nazwa dnia"><div style="display:flex;gap:14px;align-items:center"><span class="dsum" data-sum="${di}">${daySum(d)}</span><button class="btn del" data-act="delday" data-i="${di}"><span><em>Usuń dzień</em></span></button></div></div>
-        <div class="scrollx"><div style="min-width:780px;display:flex;flex-direction:column;gap:8px">
-          <div class="tb g th"><span>#</span><span>Ćwiczenie</span><span>Serie</span><span>Powtórzenia</span><span>Ciężar (kg)</span><span>RIR</span><span>RPE</span><span></span></div>
+        <div class="scrollx"><div class="ptbl pg">
+          <div class="tb g th"><span>#</span><span>Ćwiczenie</span><span>Serie</span><span>Powt.</span><span>Kg</span><span>RIR</span><span>RPE</span><span></span></div>
           ${d.rows.map((r, ri) => `<div class="tb g tr"><span class="nb">${ri + 1}</span><input class="inp" data-pp="days.${di}.rows.${ri}.ex" value="${esc(r.ex)}" placeholder="Nazwa ćwiczenia" aria-label="Ćwiczenie"><input class="inp c" data-pp="days.${di}.rows.${ri}.s" value="${esc(r.s)}" placeholder="0" inputmode="numeric" aria-label="Serie"><input class="inp c" data-pp="days.${di}.rows.${ri}.r" value="${esc(r.r)}" placeholder="0" aria-label="Powtórzenia"><input class="inp c" data-pp="days.${di}.rows.${ri}.kg" value="${esc(r.kg)}" placeholder="0" inputmode="decimal" aria-label="Ciężar"><input class="inp c rr" data-rr="rir" data-pp="days.${di}.rows.${ri}.rir" value="${esc(r.rir || '')}" placeholder="—" inputmode="decimal" aria-label="Docelowy RIR"><input class="inp c rr" data-rr="rpe" data-pp="days.${di}.rows.${ri}.rpe" value="${esc(r.rpe || '')}" placeholder="—" inputmode="decimal" aria-label="Docelowe RPE"><button class="x" data-act="delrow" data-d="${di}" data-i="${ri}" aria-label="Usuń ćwiczenie">${svg('x', 13, 2.4)}</button></div>`).join('')}
           <button class="addrow" data-act="addrow" data-d="${di}">+ Dodaj ćwiczenie</button>
         </div></div>
@@ -1305,8 +1329,8 @@ function vPlan() {
   return `<div class="grid">${top}
     <section class="card c12">
       ${head('Plan biegowy', 'Tydzień biegowy', `<span class="dsum" data-sum="run">${runSum(P)}</span>`)}
-      <div class="scrollx"><div style="min-width:760px;display:flex;flex-direction:column;gap:8px">
-        <div class="tb r th"><span>Dzień</span><span>Rodzaj</span><span>Dystans (km)</span><span>Tempo (/km)</span><span>Notatka</span><span></span></div>
+      <div class="scrollx"><div class="ptbl pr2">
+        <div class="tb r th"><span>Dzień</span><span>Rodzaj</span><span>Km</span><span>Tempo /km</span><span>Notatka</span><span></span></div>
         ${P.rows.map((r, ri) => `<div class="tb r tr"><input class="inp" data-pp="rows.${ri}.day" value="${esc(r.day)}" placeholder="np. Wtorek" aria-label="Dzień"><select class="inp" data-pp="rows.${ri}.type" aria-label="Rodzaj">${RTYPES.map(x => `<option${x === r.type ? ' selected' : ''}>${x}</option>`).join('')}</select><input class="inp c" data-pp="rows.${ri}.km" value="${esc(r.km)}" placeholder="0" inputmode="decimal" aria-label="Dystans"><input class="inp c" data-pp="rows.${ri}.pace" value="${esc(r.pace)}" placeholder="0:00" aria-label="Tempo"><input class="inp" data-pp="rows.${ri}.note" value="${esc(r.note)}" placeholder="Opcjonalnie" aria-label="Notatka"><button class="x" data-act="delrun" data-i="${ri}" aria-label="Usuń dzień">${svg('x', 13, 2.4)}</button></div>`).join('')}
         <button class="addrow" data-act="addrun">+ Dodaj dzień biegowy</button>
       </div></div>
@@ -1550,19 +1574,41 @@ function updLive() {
   (D.active ? D.active.ex : []).forEach((e, i) => { const el = document.querySelector(`[data-lpw="${i}"]`); if (el) el.textContent = fmt(sumBy(e.sets.filter(s => s.done), pwsOf), 1).replace(',0', ''); });
 }
 /* rest timer (timestamp based, survives sleep) */
-function restStart() { const sec = num(D.prefs.rest); if (!sec) return; S.rest = { end: Date.now() + sec * 1000, total: sec * 1000 }; S.restDone = false; drawRest(); }
+function restStart() { const sec = num(D.prefs.rest); if (!sec) return; unlockAudio(); S.rest = { end: Date.now() + sec * 1000, total: sec * 1000 }; S.restDone = false; drawRest(); }
+/* pill is built once; the 500 ms tick only updates text, so the ±15 s buttons never get replaced under your finger */
 function drawRest() {
   let el = document.getElementById('restp');
   if (!S.rest) { if (el) el.remove(); return; }
-  if (!el) { el = document.createElement('div'); el.id = 'restp'; el.className = 'restp'; document.body.appendChild(el); }
+  if (!el) {
+    el = document.createElement('div'); el.id = 'restp'; el.className = 'restp';
+    el.innerHTML = `<span class="rp"></span><span class="rt"><small></small><b></b></span><button class="rbtn" data-act="rest" data-v="-15" aria-label="Skróć o 15 s">−15</button><button class="rbtn" data-act="rest" data-v="15" aria-label="Wydłuż o 15 s">+15</button><button class="rbtn" data-act="rest" data-v="0" aria-label="Zamknij przerwę">${svg('x', 13, 2.6)}</button>`;
+    document.body.appendChild(el);
+  }
   const left = S.rest.end - Date.now(), over = left <= 0;
   el.classList.toggle('over', over);
-  el.innerHTML = `<span class="rp" style="--p:${over ? 100 : (1 - left / S.rest.total) * 100}%"></span><span class="rt"><small>${over ? 'Czas na serię!' : 'Przerwa'}</small><b>${over ? '+' + clock(-left) : clock(left + 999)}</b></span><button class="x" data-act="rest" data-v="-15" aria-label="Skróć o 15 s">−15</button><button class="x" data-act="rest" data-v="15" aria-label="Wydłuż o 15 s">+15</button><button class="x" data-act="rest" data-v="0" aria-label="Zamknij przerwę">${svg('x', 13, 2.6)}</button>`;
+  el.querySelector('.rp').style.setProperty('--p', (over ? 100 : (1 - left / S.rest.total) * 100) + '%');
+  el.querySelector('small').textContent = over ? 'Czas na serię!' : 'Przerwa';
+  el.querySelector('b').textContent = over ? '+' + clock(-left) : clock(left + 999);
 }
+/* gentle alarm: Web Audio is unlocked on the tap that starts the rest (iOS needs a user gesture) */
 let actx;
+function unlockAudio() {
+  try { actx = actx || new (window.AudioContext || window.webkitAudioContext)(); if (actx.state === 'suspended') actx.resume(); const b = actx.createBuffer(1, 1, 22050), s = actx.createBufferSource(); s.buffer = b; s.connect(actx.destination); s.start(0); } catch (e) {}
+}
 function beep() {
-  if (!D.prefs.sound) return;
-  try { actx = actx || new (window.AudioContext || window.webkitAudioContext)(); [0, 0.22, 0.44].forEach((t, i) => { const o = actx.createOscillator(), g = actx.createGain(); o.frequency.value = i === 2 ? 1320 : 880; o.connect(g); g.connect(actx.destination); g.gain.setValueAtTime(0.0001, actx.currentTime + t); g.gain.exponentialRampToValueAtTime(0.25, actx.currentTime + t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, actx.currentTime + t + 0.18); o.start(actx.currentTime + t); o.stop(actx.currentTime + t + 0.2); }); } catch (e) {}
+  if (!D.prefs.sound || !actx) return;
+  try {
+    if (actx.state === 'suspended') actx.resume();
+    const t0 = actx.currentTime + 0.05, notes = [659.25, 830.61, 987.77, 1318.5];
+    [0, 1.1].forEach(rep => notes.forEach((f, i) => {
+      const t = t0 + rep + i * 0.16, o = actx.createOscillator(), o2 = actx.createOscillator(), g = actx.createGain();
+      o.type = 'sine'; o2.type = 'triangle'; o.frequency.value = f; o2.frequency.value = f * 2;
+      const g2 = actx.createGain(); g2.gain.value = 0.12;
+      o.connect(g); o2.connect(g2); g2.connect(g); g.connect(actx.destination);
+      g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.22, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.6);
+      o.start(t); o2.start(t); o.stop(t + 0.65); o2.stop(t + 0.65);
+    }));
+  } catch (e) {}
 }
 let wl;
 async function wake(on) {
@@ -1720,9 +1766,10 @@ function render() {
   fab.hidden = !label || (v[0] === 'gym');
   fab.setAttribute('aria-label', label || '');
   fab.innerHTML = `<span>${svg('plus', 26, 2.6)}</span>`;
+  S.hk = 0;
   const body = { gym: vGym, run: vRun, food: vFood, plan: vPlan, set: vSettings, goals: vGoals }[v[0]]();
   const app = document.getElementById('app');
-  app.innerHTML = `<div class="ph"><span class="ghost">${v[2]}</span><div><span class="kick">Moduł ${v[2]}</span><h1 class="h1">${TITLES[v[0]] || v[1]}</h1></div><span class="saved" id="saved">✓ Zapisano</span></div>${body}`;
+  app.innerHTML = `<div class="ph"><div><h1 class="h1">${TITLES[v[0]] || v[1]}</h1></div><span class="saved" id="saved">✓ Zapisano</span></div>${body}`;
   if (S.lastView !== S.view) { app.classList.remove('swap'); void app.offsetWidth; app.classList.add('swap'); S.lastView = S.view; }
   countUp(); applyFolds(); if (S.view === 'set') updCalc();
   const at = document.querySelector('.tab.on'); if (at && at.scrollIntoView) at.scrollIntoView({ block: 'nearest', inline: 'center' });
@@ -1745,7 +1792,7 @@ function toast(title, sub, icon, kind) {
   el.className = 'toast' + (kind ? ' ' + kind : '');
   el.innerHTML = `<span class="ti">${svg(icon || 'check', 18, 2.6)}</span><span><b>${esc(title)}</b>${sub ? `<small>${esc(sub)}</small>` : ''}</span>`;
   requestAnimationFrame(() => el.classList.add('show'));
-  clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('show'), 2800);
+  clearTimeout(toastT); toastT = setTimeout(() => el.classList.remove('show'), 2000);
 }
 function burst(colors) {
   if (RM()) return;
