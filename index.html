@@ -333,7 +333,7 @@ select.inp option{background:#0b1421;color:var(--ink)}
 .ld:hover{transform:scale(1.5)}
 @keyframes pop2{from{opacity:0;transform:scale(0)}to{opacity:1;transform:scale(1)}}
 @keyframes pulse{0%{box-shadow:0 0 0 0 rgba(34,211,238,.55)}70%{box-shadow:0 0 0 10px rgba(34,211,238,0)}100%{box-shadow:0 0 0 0 rgba(34,211,238,0)}}
-.lv{position:absolute;transform:translate(-100%,-150%);font:italic 800 15px var(--cond);color:var(--cy);white-space:nowrap;pointer-events:none;opacity:0;animation:fadein .4s 1.4s forwards;z-index:3}
+.lv{position:absolute;transform:translate(-100%,-170%);background:rgba(6,18,28,.85);padding:1px 6px;font:italic 800 15px var(--cond);color:var(--cy);white-space:nowrap;pointer-events:none;opacity:0;animation:fadein .4s 1.4s forwards;z-index:3}
 .llbls{position:relative;height:16px;margin-top:8px}
 .llbls span{position:absolute;transform:translateX(-50%);font:700 12px var(--cond);letter-spacing:.12em;color:var(--ink3);text-transform:uppercase;white-space:nowrap}
 .llbls span:first-child{transform:none}
@@ -688,7 +688,7 @@ function lineChart(items, o = {}) {
       <path class="ll" d="${d}" vector-effect="non-scaling-stroke"/></svg>
     ${P.map((p, j) => `<span class="ld${j === P.length - 1 ? ' now' : ''}" style="left:${p[0]}%;top:${p[1]}%;animation-delay:${(0.4 + j * 0.9 / P.length).toFixed(2)}s" data-tip="${esc(p[2].tip)}"></span>`).join('')}
     <span class="lv" style="left:${last[0]}%;top:${last[1]}%">${esc(last[2].val)}</span>
-  </div><div class="llbls">${items.map((it, i) => (i % step === 0 || i === n - 1) && !(i !== n - 1 && n - 1 - i < step / 2) ? `<span class="${i === n - 1 ? 'now' : ''}" style="left:${X(i)}%">${esc(it.label)}</span>` : '').join('')}</div></div>`;
+  </div><div class="llbls">${items.map((it, i) => (i % step === 0 || i === n - 1) && !(i !== n - 1 && n - 1 - i < step * 0.85) ? `<span class="${i === n - 1 ? 'now' : ''}" style="left:${X(i)}%">${esc(it.label)}</span>` : '').join('')}</div></div>`;
 }
 
 /* ---------- views ---------- */
