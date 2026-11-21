@@ -262,7 +262,7 @@ select.inp{-webkit-appearance:none;appearance:none;padding-right:44px;background
 .dayname:focus{border-color:var(--cy)}
 .dsum{font:700 12px 'Saira Semi Condensed',var(--cond);letter-spacing:.2em;color:var(--ink2);text-transform:uppercase;white-space:nowrap}
 .tb{display:grid;gap:10px;align-items:center}
-.tb.g{grid-template-columns:36px minmax(0,2.6fr) minmax(60px,.7fr) minmax(76px,.9fr) minmax(80px,1fr) minmax(60px,.7fr) minmax(60px,.7fr) 38px}
+.tb.g{grid-template-columns:36px minmax(0,2.8fr) minmax(64px,.7fr) minmax(76px,.8fr) minmax(64px,.7fr) minmax(64px,.7fr) 38px}
 .inp.rr{color:var(--ice)}
 .big b.neg{background:linear-gradient(180deg,#fff,#fb9aab);-webkit-background-clip:text;background-clip:text}
 .rv.up{color:var(--teal)}.rv.dn{color:var(--dn)}
@@ -299,7 +299,7 @@ select.inp{-webkit-appearance:none;appearance:none;padding-right:44px;background
 .addrow{border:1.5px dashed var(--line2);background:transparent;color:var(--ink2);height:44px;font:italic 700 15px 'Saira Semi Condensed',var(--cond);letter-spacing:.12em;text-transform:uppercase;transition:all .2s}
 .addrow:hover{border-color:var(--cy);color:var(--cy)}
 .scrollx{overflow-x:auto}
-.ptbl{display:flex;flex-direction:column;gap:8px}.ptbl.pg{min-width:780px}.ptbl.pr2{min-width:760px}
+.ptbl{display:flex;flex-direction:column;gap:8px}.ptbl.pg{min-width:640px}.ptbl.pr2{min-width:760px}
 .tb.th>span,.lst.h>span{text-align:center}
 .tb.g.th>span:nth-child(2),.tb.r.th>span:nth-child(-n+2){text-align:center}
 .tb.g.tr>input:nth-child(2),.tb.r.tr>input:first-child{text-align:center}
@@ -585,9 +585,9 @@ body{-webkit-tap-highlight-color:transparent}
   /* plans: no sideways scrolling on phone — each exercise is two lines */
   .scrollx{overflow:visible}
   .ptbl.pg,.ptbl.pr2{min-width:0;gap:4px}
-  .tb.g{grid-template-columns:repeat(5,minmax(0,1fr)) 34px;gap:6px}
+  .tb.g{grid-template-columns:repeat(4,minmax(0,1fr)) 34px;gap:6px}
   .tb.g .nb,.tb.g.th>span:first-child,.tb.g.th>span:nth-child(2),.tb.g.th>span:last-child{display:none}
-  .tb.g.tr>:nth-child(2){grid-column:1 / 6}
+  .tb.g.tr>:nth-child(2){grid-column:1 / 5}
   .tb.g>.x,.tb.r>.x{order:1;width:34px;height:38px}
   .tb.g>:nth-child(n+3):not(.x),.tb.r>:nth-child(n+3):not(.x){order:2}
   .tb.r{grid-template-columns:repeat(3,minmax(0,1fr)) 34px;gap:6px}
@@ -1407,8 +1407,8 @@ function vPlan() {
       ${P.days.map((d, di) => `<section class="card c12">
         <div class="hd"><input class="dayname" data-pp="days.${di}.name" value="${esc(d.name)}" placeholder="Nazwa dnia" aria-label="Nazwa dnia"><div style="display:flex;gap:14px;align-items:center"><span class="dsum" data-sum="${di}">${daySum(d)}</span><button class="btn del" data-act="delday" data-i="${di}"><span><em>Usuń dzień</em></span></button></div></div>
         <div class="scrollx"><div class="ptbl pg">
-          <div class="tb g th"><span>#</span><span>Ćwiczenie</span><span>Serie</span><span>Powt.</span><span>Kg</span><span>RIR</span><span>RPE</span><span></span></div>
-          ${d.rows.map((r, ri) => `<div class="tb g tr"><span class="nb">${ri + 1}</span><input class="inp" data-pp="days.${di}.rows.${ri}.ex" value="${esc(r.ex)}" placeholder="Nazwa ćwiczenia" aria-label="Ćwiczenie"><input class="inp c" data-pp="days.${di}.rows.${ri}.s" value="${esc(r.s)}" placeholder="0" inputmode="numeric" aria-label="Serie"><input class="inp c" data-pp="days.${di}.rows.${ri}.r" value="${esc(r.r)}" placeholder="0" aria-label="Powtórzenia"><input class="inp c" data-pp="days.${di}.rows.${ri}.kg" value="${esc(r.kg)}" placeholder="0" inputmode="decimal" aria-label="Ciężar"><input class="inp c rr" data-rr="rir" data-pp="days.${di}.rows.${ri}.rir" value="${esc(r.rir || '')}" placeholder="—" inputmode="decimal" aria-label="Docelowy RIR"><input class="inp c rr" data-rr="rpe" data-pp="days.${di}.rows.${ri}.rpe" value="${esc(r.rpe || '')}" placeholder="—" inputmode="decimal" aria-label="Docelowe RPE"><button class="x" data-act="delrow" data-d="${di}" data-i="${ri}" aria-label="Usuń ćwiczenie">${svg('x', 13, 2.4)}</button></div>`).join('')}
+          <div class="tb g th"><span>#</span><span>Ćwiczenie</span><span>Serie</span><span>Powt.</span><span>RIR</span><span>RPE</span><span></span></div>
+          ${d.rows.map((r, ri) => `<div class="tb g tr"><span class="nb">${ri + 1}</span><input class="inp" data-pp="days.${di}.rows.${ri}.ex" value="${esc(r.ex)}" placeholder="Nazwa ćwiczenia" aria-label="Ćwiczenie"><input class="inp c" data-pp="days.${di}.rows.${ri}.s" value="${esc(r.s)}" placeholder="0" inputmode="numeric" aria-label="Serie"><input class="inp c" data-pp="days.${di}.rows.${ri}.r" value="${esc(r.r)}" placeholder="0" aria-label="Powtórzenia"><input class="inp c rr" data-rr="rir" data-pp="days.${di}.rows.${ri}.rir" value="${esc(r.rir || '')}" placeholder="—" inputmode="decimal" aria-label="Docelowy RIR"><input class="inp c rr" data-rr="rpe" data-pp="days.${di}.rows.${ri}.rpe" value="${esc(r.rpe || '')}" placeholder="—" inputmode="decimal" aria-label="Docelowe RPE"><button class="x" data-act="delrow" data-d="${di}" data-i="${ri}" aria-label="Usuń ćwiczenie">${svg('x', 13, 2.4)}</button></div>`).join('')}
           <button class="addrow" data-act="addrow" data-d="${di}">+ Dodaj ćwiczenie</button>
         </div></div>
       </section>`).join('')}
@@ -1606,6 +1606,8 @@ function importData(file) {
 }
 
 /* ---------- today's workout (live) ---------- */
+/* last weight used for an exercise (same set number if possible) — shown as a hint while logging */
+function lastKg(name, si) { const W = D.workouts.slice().sort(byK).reverse(); for (const w of W) { const e = (w.ex || []).find(x => x.n === name); if (e) { const S2 = exSets(e), s = S2[Math.min(si, S2.length - 1)]; return s && num(s.kg) ? String(s.kg) : ''; } } return ''; }
 function liveSuggest() {
   const P = D.plans.gym[D.act.gym] || D.plans.gym[0]; if (!P || !P.days.length) return 0;
   const last = D.workouts.slice().sort(byK).pop(); if (!last) return 0;
@@ -1614,7 +1616,7 @@ function liveSuggest() {
 }
 function liveStart(di) {
   const P = D.plans.gym[D.act.gym] || D.plans.gym[0], day = P && P.days[di];
-  const ex = day ? day.rows.filter(r => r.ex.trim()).map(r => ({ n: r.ex, plan: { s: r.s, r: r.r, kg: r.kg, rir: r.rir || '' }, sets: [...Array(Math.max(1, Math.round(num(r.s)) || 1))].map(() => ({ r: r.r || '', kg: r.kg || '', rir: r.rir || '', rpe: rirToRpe(r.rir), done: false })) })) : [];
+  const ex = day ? day.rows.filter(r => r.ex.trim()).map(r => ({ n: r.ex, plan: { s: r.s, r: r.r, kg: '', rir: r.rir || '' }, sets: [...Array(Math.max(1, Math.round(num(r.s)) || 1))].map((_, si) => ({ r: r.r || '', kg: '', ph: lastKg(r.ex, si), rir: r.rir || '', rpe: rirToRpe(r.rir), done: false })) })) : [];
   D.active = { name: day ? day.name || 'Trening' : 'Trening', startedAt: Date.now(), date: todayK(), ex };
   if (!ex.length) D.active.ex.push({ n: '', plan: null, sets: [{ r: '', kg: '', rir: '', rpe: '', done: false }] });
   store(); wake(true); render();
@@ -1648,7 +1650,7 @@ function liveCard() {
     <div class="lexs">${A2.ex.map((e, ei) => { const st = e.sets.filter(s => s.done); return `<div class="lex${e.sets.length && st.length === e.sets.length ? ' full' : ''}" data-lex="${ei}">
       <div class="exh"><input class="inp" data-lvn="${ei}" value="${esc(e.n)}" placeholder="Nazwa ćwiczenia" aria-label="Ćwiczenie"><span class="pw"><span data-lpw="${ei}">${fmt(sumBy(st, pwsOf), 1).replace(',0', '')}</span><small>PWS</small></span><button class="x" data-act="lvdelex" data-i="${ei}" aria-label="Usuń ćwiczenie">${svg('x', 12, 2.4)}</button></div>
       <div class="lst h"><span>#</span><span>Powt.</span><span>Kg</span><span>RIR</span><span>RPE</span><span>${e.plan ? `<em class="exp" title="plan">${esc(e.plan.s || '?')}×${esc(e.plan.r || '?')}</em>` : ''}</span></div>
-      ${e.sets.map((s, si) => `<div class="lst st${s.done ? ' done' : ''}"><span class="sn">${si + 1}</span><input class="inp c" maxlength="3" data-lv="${ei}.${si}.r" value="${esc(s.r)}" placeholder="0" inputmode="numeric" aria-label="Powtórzenia"><input class="inp c" maxlength="5" data-lv="${ei}.${si}.kg" value="${esc(s.kg)}" placeholder="0" inputmode="decimal" aria-label="Ciężar"><input class="inp c rr" maxlength="3" data-rr="rir" data-lv="${ei}.${si}.rir" value="${esc(s.rir)}" placeholder="—" inputmode="decimal" aria-label="RIR"><input class="inp c rr" maxlength="3" data-rr="rpe" data-lv="${ei}.${si}.rpe" value="${esc(s.rpe)}" placeholder="—" inputmode="decimal" aria-label="RPE"><button class="ok" data-act="lvdone" data-e="${ei}" data-i="${si}" aria-label="${s.done ? 'Cofnij serię' : 'Seria zrobiona'}" aria-pressed="${s.done}">${svg('check', 18, 3)}</button></div>`).join('')}
+      ${e.sets.map((s, si) => `<div class="lst st${s.done ? ' done' : ''}"><span class="sn">${si + 1}</span><input class="inp c" maxlength="3" data-lv="${ei}.${si}.r" value="${esc(s.r)}" placeholder="0" inputmode="numeric" aria-label="Powtórzenia"><input class="inp c" maxlength="5" data-lv="${ei}.${si}.kg" value="${esc(s.kg)}" placeholder="${esc(s.ph || 'kg')}" inputmode="decimal" aria-label="Ciężar"><input class="inp c rr" maxlength="3" data-rr="rir" data-lv="${ei}.${si}.rir" value="${esc(s.rir)}" placeholder="—" inputmode="decimal" aria-label="RIR"><input class="inp c rr" maxlength="3" data-rr="rpe" data-lv="${ei}.${si}.rpe" value="${esc(s.rpe)}" placeholder="—" inputmode="decimal" aria-label="RPE"><button class="ok" data-act="lvdone" data-e="${ei}" data-i="${si}" aria-label="${s.done ? 'Cofnij serię' : 'Seria zrobiona'}" aria-pressed="${s.done}">${svg('check', 18, 3)}</button></div>`).join('')}
       <div class="lrow"><button class="adds" data-act="lvaddset" data-e="${ei}">+ Seria</button>${e.sets.length > 1 ? `<button class="adds" data-act="lvdelset" data-e="${ei}">− Ostatnia</button>` : ''}</div>
     </div>`; }).join('')}</div>
     <button class="addrow lxadd" data-act="lvaddex">+ Dodaj ćwiczenie</button>
@@ -1734,12 +1736,12 @@ const dlg = (kick, title, body, foot, wide) => `<div class="ov" data-act="ovclos
 function planDay() { const m = S.m, P = D.plans.gym[m.plan] || D.plans.gym[0]; const days = P ? P.days : []; const di = Math.min(m.day || 0, Math.max(0, days.length - 1)); return { P, days, di, day: days[di] }; }
 function exFromPlan() {
   const { day } = planDay();
-  return day ? day.rows.filter(r => r.ex.trim()).map(r => ({ n: r.ex, plan: { s: r.s, r: r.r, kg: r.kg, rir: r.rir || '' }, sets: [...Array(Math.max(1, Math.round(num(r.s)) || 1))].map(() => ({ r: r.r || '', kg: r.kg || '', rir: r.rir || '', rpe: rirToRpe(r.rir) })) })) : [];
+  return day ? day.rows.filter(r => r.ex.trim()).map(r => ({ n: r.ex, plan: { s: r.s, r: r.r, kg: '', rir: r.rir || '' }, sets: [...Array(Math.max(1, Math.round(num(r.s)) || 1))].map((_, si) => ({ r: r.r || '', kg: '', ph: lastKg(r.ex, si), rir: r.rir || '', rpe: rirToRpe(r.rir) })) })) : [];
 }
 function mWorkout() {
   const m = S.m, add = m.mode === 'add';
   const { days, di } = add ? planDay() : { days: [], di: 0 };
-  const chg = (e, f, v) => e.plan && String(v).trim() !== String(e.plan[f] || '').trim() ? ' chg' : '';
+  const chg = (e, f, v) => e.plan && String(e.plan[f] || '').trim() !== '' && String(v).trim() !== String(e.plan[f] || '').trim() ? ' chg' : '';
   const top = add ? `<div class="g2">
       <label class="fld">Plan<select class="inp" data-m="plan">${D.plans.gym.map((p, i) => `<option value="${i}"${i === m.plan ? ' selected' : ''}>${esc(p.name || 'Bez nazwy')}</option>`).join('')}</select></label>
       <label class="fld">Data<input class="inp" type="date" data-m="date" value="${m.date}"></label>
@@ -1750,9 +1752,9 @@ function mWorkout() {
     </div>`;
   const exs = m.ex.map((e, ei) => `<div class="exb">
       <div class="exh"><input class="inp" data-exn="${ei}" value="${esc(e.n)}" placeholder="Nazwa ćwiczenia" aria-label="Ćwiczenie"><span class="pw"><span data-pw="${ei}">${fmt(exStats(e).pws, 1).replace(',0', '')}</span><small>PWS</small></span><button class="x" data-act="exdel" data-i="${ei}" aria-label="Usuń ćwiczenie">${svg('x', 13, 2.4)}</button></div>
-      ${e.plan ? `<span class="exp">plan: ${esc(e.plan.s || '?')} × ${esc(e.plan.r || '?')}${e.plan.kg ? ' · ' + esc(e.plan.kg) + ' kg' : ''}${isNum(e.plan.rir) ? ' · RIR ' + esc(e.plan.rir) : ''}</span>` : ''}
+      ${e.plan ? `<span class="exp">plan: ${esc(e.plan.s || '?')} × ${esc(e.plan.r || '?')}${isNum(e.plan.rir) ? ' · RIR ' + esc(e.plan.rir) : ''}</span>` : ''}
       <div class="st h"><span>#</span><span>Powt.</span><span>Kg</span><span>RIR</span><span>RPE</span><span></span></div>
-      ${e.sets.map((s, si) => `<div class="st"><span class="sn">${si + 1}</span><input class="inp c${chg(e, 'r', s.r)}" data-st="${ei}.${si}.r" data-plan="${esc(e.plan ? e.plan.r : '')}" value="${esc(s.r)}" placeholder="0" inputmode="numeric" aria-label="Powtórzenia"><input class="inp c${chg(e, 'kg', s.kg)}" data-st="${ei}.${si}.kg" data-plan="${esc(e.plan ? e.plan.kg : '')}" value="${esc(s.kg)}" placeholder="0" inputmode="decimal" aria-label="Ciężar"><input class="inp c rr${chg(e, 'rir', s.rir)}" data-rr="rir" data-st="${ei}.${si}.rir" data-plan="${esc(e.plan ? e.plan.rir : '')}" value="${esc(s.rir)}" placeholder="—" inputmode="decimal" aria-label="RIR"><input class="inp c rr" data-rr="rpe" data-st="${ei}.${si}.rpe" value="${esc(s.rpe)}" placeholder="—" inputmode="decimal" aria-label="RPE"><button class="x" data-act="setdel" data-e="${ei}" data-i="${si}" aria-label="Usuń serię">${svg('x', 12, 2.4)}</button></div>`).join('')}
+      ${e.sets.map((s, si) => `<div class="st"><span class="sn">${si + 1}</span><input class="inp c${chg(e, 'r', s.r)}" data-st="${ei}.${si}.r" data-plan="${esc(e.plan ? e.plan.r : '')}" value="${esc(s.r)}" placeholder="0" inputmode="numeric" aria-label="Powtórzenia"><input class="inp c${chg(e, 'kg', s.kg)}" data-st="${ei}.${si}.kg" data-plan="${esc(e.plan ? e.plan.kg : '')}" value="${esc(s.kg)}" placeholder="${esc(s.ph || 'kg')}" inputmode="decimal" aria-label="Ciężar"><input class="inp c rr${chg(e, 'rir', s.rir)}" data-rr="rir" data-st="${ei}.${si}.rir" data-plan="${esc(e.plan ? e.plan.rir : '')}" value="${esc(s.rir)}" placeholder="—" inputmode="decimal" aria-label="RIR"><input class="inp c rr" data-rr="rpe" data-st="${ei}.${si}.rpe" value="${esc(s.rpe)}" placeholder="—" inputmode="decimal" aria-label="RPE"><button class="x" data-act="setdel" data-e="${ei}" data-i="${si}" aria-label="Usuń serię">${svg('x', 12, 2.4)}</button></div>`).join('')}
       <button class="adds" data-act="setadd" data-e="${ei}">+ Seria</button>
     </div>`).join('');
   const body = `${top}
@@ -2096,7 +2098,7 @@ function handleField(el) {
   if (el.dataset.st != null) {
     const [ei, si, f] = el.dataset.st.split('.'); const e = S.m.ex[+ei];
     e.sets[+si][f] = el.value;
-    if (e.plan && f !== 'rpe') el.classList.toggle('chg', el.value.trim() !== (el.dataset.plan || '').trim());
+    if (e.plan && f !== 'rpe' && (el.dataset.plan || '') !== '') el.classList.toggle('chg', el.value.trim() !== el.dataset.plan.trim());
     updWk(); return;
   }
   if (el.dataset.exn != null) { S.m.ex[+el.dataset.exn].n = el.value; return; }
