@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="pl">
+<html lang="pl" spellcheck="false">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -1854,10 +1854,13 @@ function renderModal() {
   const html = { workout: mWorkout, run: mRun, food: mFood, tgoal: mTGoal, confirm: mConfirm }[S.modal];
   el.innerHTML = html ? html() : '';
   if (S.modal === 'workout') updWk();
+  noSpell();
 }
 function closeModal() { S.modal = null; S.m = {}; renderModal(); }
 
 /* ---------- render ---------- */
+/* no red spell-check squiggles or iOS autocorrect in any field */
+function noSpell() { document.querySelectorAll('input, textarea').forEach(i => { i.spellcheck = false; i.setAttribute('autocorrect', 'off'); i.setAttribute('autocomplete', 'off'); }); }
 function render() {
   const v = VIEWS.find(x => x[0] === S.view) || VIEWS[0];
   document.querySelector('.ico[data-act="goals"]').classList.toggle('on', S.view === 'goals');
@@ -1877,7 +1880,7 @@ function render() {
   const app = document.getElementById('app');
   app.innerHTML = `<div class="ph"><div><h1 class="h1">${TITLES[v[0]] || v[1]}</h1></div><span class="saved" id="saved">✓ Zapisano</span></div>${body}`;
   if (S.lastView !== S.view) { app.classList.remove('swap'); void app.offsetWidth; app.classList.add('swap'); S.lastView = S.view; }
-  countUp(); applyFolds(); if (S.view === 'set') updCalc();
+  countUp(); applyFolds(); if (S.view === 'set') updCalc(); noSpell();
   const at = document.querySelector('.tab.on'); if (at && at.scrollIntoView) at.scrollIntoView({ block: 'nearest', inline: 'center' });
 }
 function countUp() {
