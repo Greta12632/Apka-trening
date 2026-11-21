@@ -137,6 +137,13 @@ button{cursor:pointer}
 .score b{font:italic 700 26px/1 var(--cond)}
 .up{color:var(--teal)}.dn{color:var(--dn)}
 
+.stat4{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;padding:14px 18px}
+.stat4::before{display:none}
+.stat4>div{display:flex;flex-direction:column;gap:4px;padding:2px 16px;border-left:1px solid var(--line)}
+.stat4>div:first-child{border-left:0;padding-left:0}
+.stat4>div>span{font:700 11px var(--cond);letter-spacing:.18em;text-transform:uppercase;color:var(--ink3)}
+.stat4 b{font:italic 800 28px/1 var(--cond)}
+@media (max-width:760px){.stat4{grid-template-columns:1fr 1fr;gap:12px 0;padding:12px 14px}.stat4>div:nth-child(3){border-left:0;padding-left:0}.stat4 b{font-size:24px}.stat4>div>span{font-size:10px;letter-spacing:.12em}}
 .tile{justify-content:space-between;min-height:128px;gap:8px}
 .tile .tv{font:italic 800 40px/1 var(--cond);letter-spacing:.01em}
 .tile .tv small{font-size:.5em;color:var(--ink2);margin-left:4px}
@@ -1165,10 +1172,12 @@ function vGym() {
       ${head('Progres siły', 'Zmiana szac. 1RM')}
       ${lineChart(sPts, { zero: true })}
     </section>
-    ${tile('PWS · tydzień', N(cur.pws), prevSame.pws ? `<span class="${dPws >= 0 ? 'up' : 'dn'}">${sgn(dPws)}</span> vs ten sam okres` : 'powtórzenia wysoko stymulujące', 'hot')}
-    ${tile('Śr. PWS na serię', N(pwsPerSet, 1) + '<small>/ 5</small>', cur.sets + ' ' + plural(cur.sets, 'seria', 'serie', 'serii') + ' w tym tygodniu')}
-    ${tile('Śr. serii na trening', N(spw, 1), w4.n + ' ' + plural(w4.n, 'trening', 'treningi', 'treningów') + ' · 4 tygodnie')}
-    ${tile('Tonaż · tydzień', prevSame.ton ? `<span class="${dTon >= 0 ? 'up' : 'dn'}">${sgn(dTon)}</span>` : '—', fmt(cur.ton) + ' kg · vs ten sam okres')}
+    <section class="card c12 stat4">
+      <div><span>PWS · tydzień</span><b>${N(cur.pws)}</b></div>
+      <div><span>PWS / seria</span><b>${N(pwsPerSet, 1)}</b></div>
+      <div><span>Serii / trening</span><b>${N(spw, 1)}</b></div>
+      <div><span>Tonaż · tydzień</span><b class="${prevSame.ton ? (dTon >= 0 ? 'up' : 'dn') : ''}">${prevSame.ton ? sgn(dTon) : '—'}</b></div>
+    </section>
     <section class="card c5">
       ${head('Ćwiczenia', 'Szac. 1RM w %')}
       <div class="split">${ST.list.length ? ST.list.slice(0, 7).map(p => `<div class="sp"><div class="pl"><span>${esc(p.n)}</span><b class="${p.v >= 0 ? 'up' : 'dn'}">${sgn(p.v)}</b></div><div class="pbar"><i style="width:${Math.abs(p.v) / maxS * 100}%;${p.v < 0 ? 'background:var(--dn);box-shadow:0 0 12px var(--dn)' : ''}"></i></div><div class="spm">${fmt(p.first)} → <b>${fmt(p.cur)} kg</b></div></div>`).join('') : '<div class="empty">Za mało treningów</div>'}</div>
