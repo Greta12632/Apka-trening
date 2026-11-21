@@ -1338,21 +1338,23 @@ function vFood() {
 
 /* ---------- training goals ---------- */
 const GT = { weight: 'Waga ciała', lift: 'Siła · 1RM', race: 'Bieg · czas', volume: 'Kilometraż', swim: 'Pływanie · baseny', custom: 'Własny' };
+/* progress counts only entries made on/after the day the goal was created;
+   with no new data "now" equals the start, so a fresh goal is never instantly complete */
 function goalState(g) {
-  const W = D.workouts.slice().sort(byK), R = D.runs.slice().sort(byK);
-  let cur = 0, start = num(g.start), target = num(g.target), unit = '', txt = v => fmt(v, 1).replace(',0', ''), lowerBetter = false;
-  if (g.type === 'weight') { cur = curWeight(); unit = 'kg'; lowerBetter = target < start; }
-  if (g.type === 'lift') { cur = bestE1(W, g.ex); unit = 'kg 1RM'; }
-  if (g.type === 'race') { const dist = num(g.dist); cur = predict(R, dist); start = secOf(g.start); target = secOf(g.target); unit = ''; txt = v => v ? mmss(v) : '—'; lowerBetter = true; }
-  if (g.type === 'volume') { cur = sumBy(R.filter(r => r.k >= g.created), r => num(r.km)); start = 0; unit = 'km'; }
-  if (g.type === 'custom') { cur = num(g.cur); unit = g.unit || ''; lowerBetter = target < start; }
-  if (g.type === 'swim') { cur = sumBy(g.log || [], x => num(x.p)); start = 0; unit = 'basenów · ' + fmt(cur * (num(g.len) || 25) / 1000, 1) + ' km'; }
+  const since = g.created || '0000', W = D.workouts.filter(w => w.k >= since).sort(byK), R = D.runs.filter(r => r.k >= since).sort(byK);
+  let start = num(g.start), target = num(g.target), cur = null, unit = '', txt = v => fmt(v, 1).replace(',0', ''), lowerBetter = false, has = false;
+  if (g.type === 'weight') { const L = weights().filter(x => x.k >= since); if (L.length) { cur = num(L[L.length - 1].wt); has = true; } unit = 'kg'; lowerBetter = target < start; }
+  if (g.type === 'lift') { const b = bestE1(W, g.ex); if (b) { cur = b; has = true; } unit = 'kg 1RM'; }
+  if (g.type === 'race') { const dist = num(g.dist), pr = predict(R, dist); start = secOf(g.start); target = secOf(g.target); if (pr) { cur = pr; has = true; } txt = v => v ? mmss(v) : '—'; lowerBetter = true; }
+  if (g.type === 'volume') { cur = sumBy(R, r => num(r.km)); has = cur > 0; start = 0; unit = 'km'; }
+  if (g.type === 'custom') { if (isNum(g.cur)) { cur = num(g.cur); has = cur !== start; } unit = g.unit || ''; lowerBetter = target < start; }
+  if (g.type === 'swim') { cur = sumBy(g.log || [], x => num(x.p)); has = cur > 0; start = 0; unit = 'basenów · ' + fmt(cur * (num(g.len) || 25) / 1000, 1) + ' km'; }
+  if (cur == null) cur = start;
   const span = target - start;
-  let p = span ? (cur - start) / span : (cur ? 1 : 0);
-  if (g.type === 'race' && !cur) p = 0;
+  let p = has && span ? (cur - start) / span : 0;
   p = Math.max(0, Math.min(1, p));
   const left = g.due ? Math.ceil((dOf(g.due) - dOf(todayK())) / 864e5) : null;
-  return { cur, start, target, unit, txt, p, done: p >= 1, left };
+  return { cur, start, target, unit, txt, p, done: has && p >= 1, left };
 }
 const GICON = { weight: 'target', lift: 'gym', race: 'run', volume: 'run', swim: 'swim', custom: 'star' };
 function vGoals() {
