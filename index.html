@@ -335,6 +335,14 @@ select.inp option{background:#0b1421;color:var(--ink)}
 .dh{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
 .dh h2{margin:4px 0 0;font:italic 800 32px/1 var(--cond);text-transform:uppercase}
 .g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fsec{display:flex;flex-direction:column;gap:10px;padding:14px;border:1px solid var(--line);background:rgba(var(--lnr),.03)}
+.fsh{display:flex;align-items:baseline;justify-content:space-between}
+.fsh b{font:italic 800 18px var(--cond);text-transform:uppercase;letter-spacing:.03em}
+.fsh small{font:600 12px 'Saira Semi Condensed',var(--cond);letter-spacing:.14em;text-transform:uppercase;color:var(--ink3)}
+.wrow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:center}
+.wrow .btn span{padding:11px 16px}
+.wgoal{font:500 13px 'Saira Semi Condensed',var(--body);color:var(--ink2)}
+.wgoal b{color:var(--cy);font-weight:700}
 .full{grid-column:1/-1}
 .lg{display:grid;grid-template-columns:minmax(0,2fr) 72px 72px 92px 96px;gap:10px;align-items:center}
 .lg.tr strong{display:block;font:700 16px var(--cond);text-transform:uppercase;letter-spacing:.03em}
@@ -1416,8 +1424,8 @@ const ADJ = [[-500, 'Redukcja'], [-300, 'Lekka redukcja'], [0, 'Utrzymanie'], [2
 function calcPrefs() { return D.prefs.calc = Object.assign({ sex: 'm', birth: '', h: '', act: '1.55', adj: '0', mp: '30', mc: '40', mf: '30', auto: 'true', wManual: '' }, D.prefs.calc || {}); }
 const ageOf = b => { if (!b) return 0; const d = dOf(b), n = new Date(); let a = n.getFullYear() - d.getFullYear(); if (n.getMonth() < d.getMonth() || (n.getMonth() === d.getMonth() && n.getDate() < d.getDate())) a--; return a; };
 const autoOn = c => String(c.auto) !== 'false';
-function calcRes(c) {
-  const w = curWeight() || num(c.wManual), h = num(c.h), a = ageOf(c.birth) || num(c.age);
+function calcRes(c, wOv) {
+  const w = wOv || curWeight() || num(c.wManual), h = num(c.h), a = ageOf(c.birth) || num(c.age);
   if (!w || !h || !a) return null;
   const bmr = 10 * w + 6.25 * h - 5 * a + (c.sex === 'k' ? -161 : 5), tdee = bmr * num(c.act);
   return { w, a, bmr: Math.round(bmr), tdee: Math.round(tdee / 10) * 10, target: Math.round((tdee + num(c.adj)) / 10) * 10, kgWeek: num(c.adj) * 7 / 7700 };
@@ -1764,17 +1772,25 @@ function mConfirm() {
     <div class="foot cfoot"><button class="btn" data-act="close"><span><em>Anuluj</em></span></button><button class="btn ${m.kind === "ok" ? "good" : "danger"}" data-act="confirmok"><span><em>${esc(m.ok)}</em></span></button></div></div></div>`;
 }
 function ask(title, text, ok, fn, kind, strong) { S.modal = 'confirm'; S.m = { title, text, ok, fn, kind, strong }; renderModal(); }
+function wtGoalTxt(v) { const c = calcPrefs(), R = autoOn(c) ? calcRes(c, isNum(v) ? num(v) : 0) : null; return R ? 'Cel na ten dzień: <b>' + fmt(R.target) + ' kcal</b>' : (autoOn(c) ? 'Uzupełnij profil w Ustawieniach, żeby liczyć cel z wagi' : 'Cel kalorii ustawiony ręcznie: <b>' + fmt(num(D.goals.kcal)) + ' kcal</b>'); }
 function mFood() {
   const m = S.m;
-  const f = (k, l, ph, full) => `<label class="fld${full ? ' full' : ''}">${l}<input class="inp${full ? '' : ' c'}" data-m="${k}" value="${esc(m[k] || '')}" placeholder="${ph}" inputmode="decimal"></label>`;
-  const cw = curWeight();
-  const body = `<div class="g2">
-    <label class="fld">Data<input class="inp" type="date" data-m="date" value="${m.date}"></label>
-    ${f('wt', 'Waga (kg)', cw ? fmt(cw, 1) : '80,0')}
-    ${f('kc', 'Kalorie (kcal)', '2 400', true)}${f('b', 'Białko (g)', '150')}${f('w', 'Węglowodany (g)', '260')}${f('t', 'Tłuszcze (g)', '70')}${f('wa', 'Woda (l)', '2,5')}
-  </div>
-  <p class="pwsinfo">Możesz zapisać samą wagę albo same kalorie.</p>`;
-  return dlg('Kalorie i waga', m.origK ? 'Edytuj dzień' : 'Wpisz dzień', body, `${m.origK ? `<button class="btn del" data-act="delent" data-ty="food" data-id="f${esc(m.origK)}"><span><em>Usuń</em></span></button>` : ""}<button class="btn pri" data-act="savef"><span><em>Zapisz dzień</em></span></button>`);
+  const f = (k, l, ph) => `<label class="fld">${l}<input class="inp c" data-m="${k}" value="${esc(m[k] || '')}" placeholder="${ph}" inputmode="decimal"></label>`;
+  const cw = curWeight(), ex = D.food.find(x => x.k === (m.date || todayK()));
+  const body = `<label class="fld">Data<input class="inp" type="date" data-m="date" value="${m.date}"></label>
+    <div class="fsec">
+      <div class="fsh"><b>Waga</b><small>rano</small></div>
+      <div class="wrow"><span class="cin1"><input class="inp c" data-m="wt" value="${esc(m.wt || '')}" placeholder="${cw ? fmt(cw, 1) : '80'}" inputmode="decimal" maxlength="5" aria-label="Waga"><i>kg</i></span><button class="btn pri" data-act="savewt"><span>${svg('check', 14, 3)}<em>Zapisz wagę</em></span></button></div>
+      <small class="wgoal" data-wgoal>${wtGoalTxt(m.wt || '')}</small>
+    </div>
+    <div class="fsec">
+      <div class="fsh"><b>Kalorie i makro</b><small>wieczorem${ex && num(ex.kc) ? ' · zapisane' : ''}</small></div>
+      <div class="g2">
+        <label class="fld full">Kalorie (kcal)<input class="inp c" data-m="kc" value="${esc(m.kc || '')}" placeholder="${fmt(goalsEff().kcal)}" inputmode="decimal"></label>
+        ${f('b', 'Białko (g)', String(goalsEff().prot))}${f('w', 'Węglowodany (g)', String(goalsEff().carb))}${f('t', 'Tłuszcze (g)', String(goalsEff().fat))}${f('wa', 'Woda (l)', '2,5')}
+      </div>
+    </div>`;
+  return dlg('Kalorie i waga', m.origK ? 'Edytuj dzień' : 'Wpisz dzień', body, `${m.origK ? `<button class="btn del" data-act="delent" data-ty="food" data-id="f${esc(m.origK)}"><span><em>Usuń</em></span></button>` : ''}<button class="btn pri" data-act="savef"><span><em>Zapisz kalorie</em></span></button>`);
 }
 const DISTS = [['5', '5 km'], ['10', '10 km'], ['21,1', 'Półmaraton'], ['42,2', 'Maraton']];
 function goalDefaults(m) {
@@ -2005,7 +2021,21 @@ const A = {
   },
   goplan: () => { closeModal(); S.ptype = 'gym'; go('plan'); },
   saver: () => { const m = S.m, km = m.km || m.kmPh; if (!num(km)) { const i = document.querySelector('[data-m="km"]'); if (i) i.focus(); return; } const rec = { id: m.editId || uid(), k: m.date || todayK(), type: m.type, km: String(km).replace('.', ','), time: m.time || '' }; if (m.editId) { D.runs = D.runs.map(r => r.id === m.editId ? rec : r); S.dk = rec.k; save(); closeModal(); render(); toast('Zmiany zapisane', rec.type + ' · ' + rec.km + ' km', 'check'); checkGoals(); return; } D.runs.push(rec); save(); closeModal(); go('run'); toast('Bieg zapisany', rec.type + ' · ' + rec.km + ' km' + (rec.time ? ' · ' + mmss(paceOf(rec.km, rec.time)) + ' /km' : ''), 'check'); checkGoals(); },
-  savef: () => { const m = S.m; if (!num(m.kc) && !isNum(m.wt)) { const i = document.querySelector('[data-m="kc"]'); if (i) i.focus(); return; } const k = m.date || todayK(); const fromData = S.view === 'data'; const rec = { k }; if (num(m.kc)) Object.assign(rec, { kc: String(num(m.kc)), b: m.b || '0', w: m.w || '0', t: m.t || '0', wa: m.wa || '0' }); if (isNum(m.wt)) rec.wt = String(m.wt).replace('.', ','); D.food = D.food.filter(f => f.k !== k && f.k !== m.origK).concat([rec]); if (fromData) S.dk = k; save(); closeModal(); go(fromData ? 'data' : 'food'); toast('Dzień zapisany', [rec.kc ? fmt(num(rec.kc)) + ' kcal' : '', rec.wt ? rec.wt + ' kg' : ''].filter(Boolean).join(' · '), 'check'); checkGoals(); },
+  savewt: () => {
+    const m = S.m; if (!isNum(m.wt)) { const i = document.querySelector('[data-m="wt"]'); if (i) i.focus(); return; }
+    const k = m.date || todayK(), prev = D.food.find(f => f.k === k) || { k };
+    const rec = Object.assign({}, prev, { k, wt: String(m.wt).replace('.', ',') }); delete rec.demo;
+    D.food = D.food.filter(f => f.k !== k).concat([rec]); save(); closeModal(); go('food');
+    const G = goalsEff(); toast('Waga zapisana · ' + rec.wt + ' kg', 'cel na dziś: ' + fmt(G.kcal) + ' kcal · B ' + G.prot + ' g', 'check'); checkGoals();
+  },
+  savef: () => {
+    const m = S.m; if (!num(m.kc)) { const i = document.querySelector('[data-m="kc"]'); if (i) i.focus(); return; }
+    const k = m.date || todayK(), prev = D.food.find(f => f.k === k) || (m.origK && D.food.find(f => f.k === m.origK)) || {};
+    const rec = Object.assign({}, prev, { k, kc: String(num(m.kc)), b: m.b || '0', w: m.w || '0', t: m.t || '0', wa: m.wa || '0' }); delete rec.demo;
+    if (isNum(m.wt)) rec.wt = String(m.wt).replace('.', ',');
+    D.food = D.food.filter(f => f.k !== k && f.k !== m.origK).concat([rec]); save(); closeModal(); go('food');
+    toast('Kalorie zapisane', fmt(num(rec.kc)) + ' kcal' + (rec.wt ? ' · ' + rec.wt + ' kg' : ''), 'check'); checkGoals();
+  },
 };
 document.addEventListener('click', ev => {
   const bt = ev.target.closest('.bt, .ld');
@@ -2054,6 +2084,7 @@ function handleField(el) {
   if (el.dataset.calc != null) { const c = calcPrefs(); c[el.dataset.calc] = el.value.replace('−', '-'); store(); updCalc(); return; }
   if (el.dataset.m != null) {
     const k = el.dataset.m; S.m[k] = el.value;
+    if (S.modal === 'food' && k === 'wt') { const g = document.querySelector('[data-wgoal]'); if (g) g.innerHTML = wtGoalTxt(el.value); }
     if (S.modal === 'tgoal') {
       if (k === 'dist') renderModal();
       if (k === 'ex') { const s = document.querySelector('[data-m="start"]'); if (s) s.placeholder = 'teraz: ' + (goalDefaults(S.m).start || '—'); }
